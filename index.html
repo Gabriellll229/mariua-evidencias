@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mariuá — Evidências Fotográficas</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="shortcut icon" href="favicon.ico">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
 <style>
@@ -163,21 +165,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg-page);color:var
 
 <!-- HEADER -->
 <div class="header">
-  <svg class="logo-svg" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="22" cy="22" r="7" fill="#EF9F27"/>
-    <line x1="22" y1="15" x2="22" y2="5" stroke="#EF9F27" stroke-width="3" stroke-linecap="round"/>
-    <circle cx="22" cy="4" r="3" fill="#EF9F27"/>
-    <line x1="22" y1="29" x2="22" y2="39" stroke="#EF9F27" stroke-width="3" stroke-linecap="round"/>
-    <circle cx="22" cy="40" r="3" fill="#D85A30"/>
-    <line x1="15" y1="22" x2="5" y2="22" stroke="#EF9F27" stroke-width="3" stroke-linecap="round"/>
-    <circle cx="4" cy="22" r="3" fill="#D85A30"/>
-    <line x1="29" y1="22" x2="39" y2="22" stroke="#EF9F27" stroke-width="3" stroke-linecap="round"/>
-    <circle cx="40" cy="22" r="3" fill="#EF9F27"/>
-    <line x1="16" y1="16" x2="9" y2="9" stroke="#EF9F27" stroke-width="3" stroke-linecap="round"/>
-    <circle cx="7" cy="7" r="3" fill="#D85A30"/>
-    <line x1="28" y1="28" x2="35" y2="35" stroke="#EF9F27" stroke-width="2.5" stroke-linecap="round"/>
-    <circle cx="37" cy="37" r="2.5" fill="#EF9F27"/>
-  </svg>
+  <img src="giphy.gif" class="logo-svg" alt="Mariuá Logo" style="border-radius:6px;object-fit:cover;">
   <div class="logo-text">
     <h1>MARIUÁ</h1>
     <small>Construção e Energia</small>
@@ -527,14 +515,33 @@ function saveBarr(sk,idx,val){
 function toggleDark(){
   const d=document.body.classList.toggle('dark');
   document.getElementById('dark-btn').textContent=d?'☀️ Light':'🌙 Dark';
-  localStorage.setItem('md',d?'1':'');
+  localStorage.setItem('md',d?'1':'0');
 }
-if(localStorage.getItem('md')==='1'){
-  document.body.classList.add('dark');
-  document.addEventListener('DOMContentLoaded',()=>{
-    const b=document.getElementById('dark-btn'); if(b) b.textContent='☀️ Light';
-  });
-}
+
+// Detecta modo do sistema se o usuário nunca escolheu manualmente
+(function(){
+  const saved=localStorage.getItem('md');
+  let isDark=false;
+  if(saved==='1') isDark=true;
+  else if(saved==='0') isDark=false;
+  else if(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches) isDark=true;
+  if(isDark){
+    document.body.classList.add('dark');
+    document.addEventListener('DOMContentLoaded',()=>{
+      const b=document.getElementById('dark-btn'); if(b) b.textContent='☀️ Light';
+    });
+  }
+  // Escuta mudanças do sistema em tempo real (só quando o usuário não fixou manualmente)
+  if(window.matchMedia){
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',e=>{
+      if(localStorage.getItem('md')===null){
+        document.body.classList.toggle('dark',e.matches);
+        const b=document.getElementById('dark-btn');
+        if(b) b.textContent=e.matches?'☀️ Light':'🌙 Dark';
+      }
+    });
+  }
+})();
 
 /* ================================================================
    NAVIGATION
