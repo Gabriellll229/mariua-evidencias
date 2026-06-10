@@ -312,6 +312,52 @@ body.dark .sidebar-item.active{background:#1a3028;color:var(--teal-mid)}
   .header{padding:10px 13px}
   .section{margin:10px}
 }
+
+/* ── ADMIN MODAL ── */
+#admin-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:9990;display:flex;align-items:center;justify-content:center}
+#admin-modal.hidden{display:none}
+#admin-card{background:#0d1220;border:1.5px solid rgba(255,255,255,.15);border-radius:22px;padding:32px 40px;max-width:560px;width:94%;color:#fff;max-height:90vh;overflow-y:auto;position:relative}
+.admin-title{font-size:18px;font-weight:800;margin-bottom:6px;color:#fff}
+.admin-sub{font-size:12px;color:rgba(255,255,255,.5);margin-bottom:20px}
+.admin-close{position:absolute;top:14px;right:18px;background:none;border:none;color:#fff;font-size:22px;cursor:pointer;opacity:.7}
+.admin-close:hover{opacity:1}
+.admin-tab-bar{display:flex;gap:8px;margin-bottom:18px}
+.admin-tab{padding:7px 16px;border-radius:10px;border:1.5px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.6);font-size:12px;font-weight:600;cursor:pointer;transition:.15s}
+.admin-tab.active{background:rgba(255,180,60,.2);border-color:#ffb347;color:#ffb347}
+.admin-section{display:none}.admin-section.active{display:block}
+/* Stats cards */
+.admin-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.stat-card{background:rgba(255,255,255,.07);border-radius:12px;padding:16px;text-align:center}
+.stat-num{font-size:28px;font-weight:900;color:#ffb347}
+.stat-label{font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;letter-spacing:.5px;text-transform:uppercase}
+/* User list */
+.user-row{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;background:rgba(255,255,255,.05);margin-bottom:8px}
+.user-row img{width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.user-info{flex:1;min-width:0}
+.user-name{font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-meta{font-size:10px;color:rgba(255,255,255,.45);margin-top:2px}
+.user-actions{display:flex;gap:6px;flex-shrink:0}
+.btn-edit-user{padding:5px 10px;font-size:11px;border-radius:8px;border:none;background:rgba(29,158,117,.3);color:#9FE1CB;cursor:pointer;font-weight:600}
+.btn-edit-user:hover{background:rgba(29,158,117,.5)}
+.btn-del-user{padding:5px 10px;font-size:11px;border-radius:8px;border:none;background:rgba(200,50,50,.25);color:#ff9999;cursor:pointer;font-weight:600}
+.btn-del-user:hover{background:rgba(200,50,50,.45)}
+/* Password gate */
+#admin-gate{position:fixed;inset:0;background:rgba(0,20,80,.75);backdrop-filter:blur(8px);z-index:9992;display:flex;align-items:center;justify-content:center}
+#admin-gate.hidden{display:none}
+#admin-gate-card{background:linear-gradient(145deg,#001a52,#003a9e);border:1.5px solid rgba(255,255,255,.2);border-radius:22px;padding:44px 56px;text-align:center;max-width:360px;width:90%}
+#admin-gate-card h2{font-size:22px;font-weight:900;color:#fff;margin-bottom:6px}
+#admin-gate-card p{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:20px}
+#admin-pw-input{width:100%;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.25);border-radius:10px;padding:11px 14px;color:#fff;font-size:16px;text-align:center;letter-spacing:4px;outline:none;margin-bottom:14px;font-family:monospace}
+#admin-pw-input:focus{border-color:rgba(255,180,60,.6)}
+.admin-pw-err{font-size:12px;color:#ff6b6b;margin-bottom:10px;min-height:18px}
+/* Online avatars strip in header */
+#online-avatars{display:flex;align-items:center;padding-right:4px}
+.online-av-wrap{position:relative;display:inline-block;margin-right:-8px}
+.online-av{width:32px;height:32px;border-radius:50%;object-fit:cover;border:2.5px solid rgba(255,255,255,.7);cursor:default;transition:transform .15s;display:block}
+.online-av:hover{transform:scale(1.15) translateY(-3px);z-index:10;position:relative}
+.online-av-tip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:rgba(0,0,0,.85);color:#fff;font-size:11px;font-weight:600;padding:4px 9px;border-radius:8px;white-space:nowrap;pointer-events:none;opacity:0;transition:.2s;z-index:100}
+.online-av-wrap:hover .online-av-tip{opacity:1}
+.online-av-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:rgba(0,0,0,.85)}
 </style>
 </head>
 <body>
@@ -718,6 +764,7 @@ function saveEditProfile(){
     <div class="header-datetime" id="header-datetime"></div>
   </div>
   <div class="header-right" style="display:flex;align-items:center;gap:10px">
+    <div id="online-avatars"></div>
     <div id="user-avatar-display" style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="openEditProfile()" title="Editar perfil">
       <div style="position:relative">
         <img id="header-avatar-img" src="" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.5);background:#1a2a3a" alt="Avatar">
@@ -790,6 +837,11 @@ function saveEditProfile(){
       <div class="sidebar-icon">☁️</div>
       <span class="sidebar-label">Registros Salvos</span>
       <span class="sidebar-arrow">›</span>
+    </div>
+    <div class="sidebar-section">Sistema</div>
+    <div class="sidebar-item" onclick="openAdminGate()" style="cursor:pointer">
+      <div class="sidebar-icon">🔐</div>
+      <span class="sidebar-label">Painel Admin</span>
     </div>
   </div>
 </nav>
@@ -2718,33 +2770,7 @@ function setSidebarActive(page){
     document.getElementById('sidebar').classList.add('collapsed');
 })();
 
-// ── PRESENÇA ONLINE ──────────────────────────────────────────
-    (function(){
-      const uid = 'u_' + Math.random().toString(36).slice(2);
-      const presRef = _db.collection('presenca').doc(uid);
-
-      // Registra este usuário como online
-      presRef.set({ online: true, ts: Date.now() });
-
-      // Remove ao sair
-      window.addEventListener('beforeunload', () => presRef.delete());
-
-      // Renova a cada 20s (evita expirar)
-      setInterval(() => presRef.set({ online: true, ts: Date.now() }), 20000);
-
-      // Remove presença antiga (mais de 60s sem renovar) e atualiza contador
-      _db.collection('presenca').onSnapshot(snap => {
-        const agora = Date.now();
-        let count = 0;
-        snap.docs.forEach(d => {
-          const data = d.data();
-          if (agora - (data.ts || 0) < 60000) count++;
-          else d.ref.delete(); // limpa fantasmas
-        });
-        const el = document.getElementById('online-count');
-        if (el) el.textContent = count;
-      });
-    })();
+// ── PRESENÇA: gerenciada pelo script externo ──
   } catch(e) {
     window._fbReady = false;
     console.warn('Firebase não carregou:', e.message);
@@ -2753,5 +2779,265 @@ function setSidebarActive(page){
 </script>
 </div><!-- /app-content -->
 </div><!-- /app-shell -->
+
+<!-- ADMIN PASSWORD GATE -->
+<div id="admin-gate" class="hidden">
+  <div id="admin-gate-card">
+    <div style="font-size:36px;margin-bottom:10px">🔐</div>
+    <h2>Área Admin</h2>
+    <p>Digite a senha para acessar o painel de administrador</p>
+    <input type="password" id="admin-pw-input" placeholder="••••" maxlength="10"
+      onkeydown="if(event.key==='Enter') adminLogin()">
+    <div class="admin-pw-err" id="admin-pw-err"></div>
+    <button class="pbtn" onclick="adminLogin()" style="width:100%;margin-bottom:10px">Entrar</button>
+    <button class="pbtn pbtn-skip" onclick="closeAdminGate()" style="width:100%">Cancelar</button>
+  </div>
+</div>
+
+<!-- ADMIN PANEL MODAL -->
+<div id="admin-modal" class="hidden">
+  <div id="admin-card">
+    <button class="admin-close" onclick="closeAdminModal()">✕</button>
+    <div class="admin-title">🛡️ Painel do Administrador</div>
+    <div class="admin-sub">Gabriel Santos — Acesso total ao sistema</div>
+
+    <div class="admin-tab-bar">
+      <button class="admin-tab active" onclick="adminTab('stats')">📊 Usuários</button>
+      <button class="admin-tab" onclick="adminTab('today')">📅 Hoje</button>
+      <button class="admin-tab" onclick="adminTab('manage')">⚙️ Gerenciar</button>
+    </div>
+
+    <!-- STATS TAB -->
+    <div class="admin-section active" id="atab-stats">
+      <div class="admin-stats">
+        <div class="stat-card"><div class="stat-num" id="stat-total">–</div><div class="stat-label">Total de Usuários</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-online">–</div><div class="stat-label">Online Agora</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-today">–</div><div class="stat-label">Logaram Hoje</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-reg">–</div><div class="stat-label">Registros Salvos</div></div>
+      </div>
+      <div style="font-size:11px;color:rgba(255,255,255,.4);text-align:center">Atualizado em tempo real via Firebase</div>
+    </div>
+
+    <!-- TODAY TAB -->
+    <div class="admin-section" id="atab-today">
+      <div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:10px">Usuários que acessaram hoje:</div>
+      <div id="today-list"><div style="text-align:center;color:rgba(255,255,255,.3);padding:20px">Carregando...</div></div>
+    </div>
+
+    <!-- MANAGE TAB -->
+    <div class="admin-section" id="atab-manage">
+      <div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:10px">Todos os usuários cadastrados:</div>
+      <div id="manage-list"><div style="text-align:center;color:rgba(255,255,255,.3);padding:20px">Carregando...</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══ ADMIN SYSTEM ══════════════════════════════════════════
+const ADMIN_PASSWORD = '0609';
+let adminUnlocked = false;
+
+function openAdminGate(){
+  document.getElementById('admin-gate').classList.remove('hidden');
+  document.getElementById('admin-pw-input').value = '';
+  document.getElementById('admin-pw-err').textContent = '';
+  setTimeout(()=>document.getElementById('admin-pw-input').focus(), 100);
+}
+function closeAdminGate(){
+  document.getElementById('admin-gate').classList.add('hidden');
+}
+function adminLogin(){
+  const pw = document.getElementById('admin-pw-input').value;
+  if(pw === ADMIN_PASSWORD){
+    adminUnlocked = true;
+    closeAdminGate();
+    openAdminModal();
+  } else {
+    document.getElementById('admin-pw-err').textContent = '❌ Senha incorreta';
+    document.getElementById('admin-pw-input').value = '';
+    document.getElementById('admin-pw-input').focus();
+  }
+}
+function openAdminModal(){
+  if(!adminUnlocked){ openAdminGate(); return; }
+  document.getElementById('admin-modal').classList.remove('hidden');
+  adminTab('stats');
+  loadAdminData();
+}
+function closeAdminModal(){
+  document.getElementById('admin-modal').classList.add('hidden');
+}
+function adminTab(tab){
+  document.querySelectorAll('.admin-tab').forEach((b,i)=>{
+    b.classList.toggle('active', ['stats','today','manage'][i]===tab);
+  });
+  document.querySelectorAll('.admin-section').forEach((s,i)=>{
+    s.classList.toggle('active', ['atab-stats','atab-today','atab-manage'][i]==='atab-'+tab);
+  });
+}
+
+async function loadAdminData(){
+  if(!window._fbReady) return;
+  try {
+    const _db = firebase.firestore();
+    
+    // Total users & today
+    const usersSnap = await _db.collection('usuarios').get();
+    const total = usersSnap.size;
+    document.getElementById('stat-total').textContent = total;
+    
+    const today = new Date(); today.setHours(0,0,0,0);
+    const todayUsers = usersSnap.docs.filter(d=>{
+      const u = d.data();
+      return u.ultimoAcesso && new Date(u.ultimoAcesso) >= today;
+    });
+    document.getElementById('stat-today').textContent = todayUsers.length;
+    
+    // Online count (presença)
+    const presSnap = await _db.collection('presenca').get();
+    const agora = Date.now();
+    const online = presSnap.docs.filter(d=> agora - (d.data().ts||0) < 60000).length;
+    document.getElementById('stat-online').textContent = online;
+    
+    // Registros count
+    const regSnap = await _db.collection('registros').get();
+    document.getElementById('stat-reg').textContent = regSnap.size;
+    
+    // TODAY TAB
+    const todayEl = document.getElementById('today-list');
+    if(todayUsers.length === 0){
+      todayEl.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,.3);padding:20px">Nenhum usuário acessou hoje</div>';
+    } else {
+      todayEl.innerHTML = todayUsers.map(d=>{
+        const u = d.data();
+        const av = (typeof AVATARS !== 'undefined' && AVATARS[u.avatarId]) ? AVATARS[u.avatarId].src : '';
+        return `<div class="user-row">
+          <img src="${av}" onerror="this.style.background='#1a3a5c';this.removeAttribute('src')">
+          <div class="user-info">
+            <div class="user-name">${u.nome||'?'} ${u.sobrenome||''}</div>
+            <div class="user-meta">Último acesso: ${u.ultimoAcesso ? new Date(u.ultimoAcesso).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}) : 'n/d'}</div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+    
+    // MANAGE TAB
+    const manageEl = document.getElementById('manage-list');
+    if(total === 0){
+      manageEl.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,.3);padding:20px">Nenhum usuário cadastrado</div>';
+    } else {
+      manageEl.innerHTML = usersSnap.docs.map(d=>{
+        const u = d.data(); const uid = d.id;
+        const av = (typeof AVATARS !== 'undefined' && AVATARS[u.avatarId]) ? AVATARS[u.avatarId].src : '';
+        return `<div class="user-row" id="urow-${uid}">
+          <img src="${av}" onerror="this.style.background='#1a3a5c';this.removeAttribute('src')">
+          <div class="user-info">
+            <div class="user-name">${u.nome||'?'} ${u.sobrenome||''}</div>
+            <div class="user-meta">${u.genero||''} ${u.aniversario ? '· 🎂 '+u.aniversario : ''}</div>
+          </div>
+          <div class="user-actions">
+            <button class="btn-del-user" onclick="adminDeleteUser('${uid}')">🗑️</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+  } catch(e){ console.error('Admin load error:',e); }
+}
+
+async function adminDeleteUser(uid){
+  if(!confirm('Excluir este usuário? Esta ação não pode ser desfeita.')) return;
+  try {
+    await firebase.firestore().collection('usuarios').doc(uid).delete();
+    const el = document.getElementById('urow-'+uid);
+    if(el) el.remove();
+    loadAdminData();
+  } catch(e){ alert('Erro ao excluir: '+e.message); }
+}
+// ══ END ADMIN ═══════════════════════════════════════════
+</script>
+
+<!-- ONLINE AVATARS PRESENCE SCRIPT -->
+<script>
+(function(){
+  // Only runs after Firebase is ready
+  function initPresence(){
+    if(!window._fbReady) return;
+    const _db = firebase.firestore();
+    const profile = JSON.parse(localStorage.getItem('mariua_profile')||'null');
+    
+    // Register today's access for admin stats
+    let uid = localStorage.getItem('mariua_uid');
+    if(!uid){ uid = 'u_'+Math.random().toString(36).slice(2); localStorage.setItem('mariua_uid',uid); }
+    
+    // Save user to 'usuarios' collection (persistent)
+    if(profile){
+      _db.collection('usuarios').doc(uid).set({
+        nome: profile.nome||'',
+        sobrenome: profile.sobrenome||'',
+        avatarId: profile.avatarId||0,
+        genero: profile.gender||'',
+        aniversario: profile.birthday||'',
+        ultimoAcesso: new Date().toISOString()
+      }, {merge:true});
+    }
+    
+    // Presence (temporary)
+    const presRef = _db.collection('presenca').doc(uid);
+    const AVIDS = typeof AVATARS !== 'undefined' ? AVATARS : [];
+    const avSrc = (profile && AVIDS[profile.avatarId]) ? AVIDS[profile.avatarId].src : '';
+    
+    function registrar(){
+      presRef.set({
+        ts: Date.now(),
+        nome: (profile&&profile.nome)||'Usuário',
+        avatar: avSrc
+      });
+    }
+    registrar();
+    window.addEventListener('beforeunload',()=>presRef.delete());
+    setInterval(registrar, 20000);
+    
+    // Listen and render other users
+    _db.collection('presenca').onSnapshot(snap=>{
+      const agora = Date.now();
+      const outros = [];
+      snap.docs.forEach(d=>{
+        if(d.id===uid) return;
+        const data = d.data();
+        if(agora-(data.ts||0)<60000) outros.push({nome:data.nome||'Usuário',avatar:data.avatar||''});
+        else d.ref.delete();
+      });
+      const container = document.getElementById('online-avatars');
+      if(!container) return;
+      container.innerHTML='';
+      outros.forEach(u=>{
+        const wrap = document.createElement('div');
+        wrap.className='online-av-wrap';
+        const img = document.createElement('img');
+        img.className='online-av';
+        img.src = u.avatar||'';
+        img.alt = u.nome;
+        if(!u.avatar) img.style.background='#1a3a5c';
+        const tip = document.createElement('div');
+        tip.className='online-av-tip';
+        tip.textContent = u.nome;
+        wrap.appendChild(img);
+        wrap.appendChild(tip);
+        container.appendChild(wrap);
+      });
+    });
+    window._reRegistrarPresenca = registrar;
+  }
+  
+  // Wait for Firebase to be ready
+  let tries = 0;
+  const check = setInterval(()=>{
+    tries++;
+    if(window._fbReady){ clearInterval(check); initPresence(); }
+    else if(tries>20) clearInterval(check);
+  }, 300);
+})();
+</script>
+
 </body>
 </html>
