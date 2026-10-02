@@ -358,6 +358,13 @@ body.dark .sidebar-item.active{background:#1a3028;color:var(--teal-mid)}
 .online-av-wrap:hover .online-av-tip{opacity:1}
 .online-av-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:rgba(0,0,0,.85)}
 /* AUTH + ADMIN EXTRA */
+.foto-box{display:flex;align-items:center;gap:12px;justify-content:center;margin:10px 0 4px;flex-wrap:wrap}
+.foto-prev{width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid #ffb347;background:#123a2c;display:none}
+.foto-prev.on{display:block}
+.foto-btn{padding:9px 14px;border-radius:12px;border:1.5px dashed rgba(255,255,255,.6);background:rgba(255,255,255,.1);color:#fff;font-weight:700;font-size:12px;cursor:pointer}
+.foto-btn:hover{background:rgba(255,255,255,.2)}
+.foto-rm{background:none;border:none;color:#ff9999;font-size:11px;cursor:pointer;text-decoration:underline;display:none}
+.foto-rm.on{display:inline}
 .login-help{background:rgba(255,255,255,.1);border-left:4px solid #4ade80;border-radius:8px;padding:10px 12px;font-size:12px;line-height:1.5;color:rgba(255,255,255,.9);text-align:left;margin-bottom:14px}
 .login-help b{color:#9fe1cb}
 .login-preview{font-size:13px;color:#9fe1cb;margin:-4px 0 12px;text-align:left}
@@ -531,6 +538,13 @@ body.dark .sidebar-item.active{background:#1a3028;color:var(--teal-mid)}
       <div class="pcard-title">Escolha seu avatar</div>
       <div class="pcard-sub">Selecione um personagem para te representar</div>
       <div class="pcard-bar"></div>
+      <div class="foto-box">
+        <img class="foto-prev" id="p-foto-prev" alt="Sua foto">
+        <button type="button" class="foto-btn" onclick="document.getElementById('p-foto-file').click()">📷 Enviar minha foto</button>
+        <button type="button" class="foto-rm" id="p-foto-rm" onclick="clearFoto(false)">remover foto</button>
+        <input type="file" id="p-foto-file" accept="image/*" style="display:none" onchange="onFotoFile(this,false)">
+      </div>
+      <div class="auth-err" id="p-foto-err"></div>
       <div class="av-section-label">👨 Masculino</div>
       <div class="avatar-grid" id="av-male-grid"></div>
       <div class="av-section-label" style="margin-top:10px">👩 Feminino</div>
@@ -590,7 +604,13 @@ body.dark .sidebar-item.active{background:#1a3028;color:var(--teal-mid)}
       <input class="pinput" id="edit-sobrenome" placeholder="Sobrenome">
     </div>
     <div class="edit-row">
-      <div class="edit-label">Avatar</div>
+      <div class="edit-label">Avatar ou foto</div>
+      <div class="foto-box">
+        <button type="button" class="foto-btn" onclick="document.getElementById('e-foto-file').click()">📷 Enviar minha foto</button>
+        <button type="button" class="foto-rm" id="e-foto-rm" onclick="clearFoto(true)">remover foto</button>
+        <input type="file" id="e-foto-file" accept="image/*" style="display:none" onchange="onFotoFile(this,true)">
+      </div>
+      <div class="auth-err" id="e-foto-err"></div>
       <div class="av-section-label">👨 Masculino</div>
       <div class="avatar-grid" id="edit-av-male"></div>
       <div class="av-section-label" style="margin-top:8px">👩 Feminino</div>
@@ -699,7 +719,7 @@ async function doLogin(){
     const snap=await firebase.firestore().collection('usuarios').doc(login).get();
     if(!snap.exists || snap.data().senha!==senha){ err.textContent='❌ Login ou senha incorretos.'; btn.disabled=false; return; }
     const u=snap.data();
-    profile={nome:u.nome||'',sobrenome:u.sobrenome||'',avatarId:u.avatarId||0,gender:u.genero||'',birthday:u.aniversario||''};
+    profile={nome:u.nome||'',sobrenome:u.sobrenome||'',avatarId:u.avatarId||0,foto:u.foto||'',gender:u.genero||'',birthday:u.aniversario||''};
     localStorage.setItem('mariua_profile',JSON.stringify(profile));
     localStorage.setItem('mariua_login',login);
     sessionStorage.setItem('mariua_acesso_ok','1');
@@ -750,14 +770,53 @@ function renderAvatarGrids(maleId, femaleId, isEdit){
   });
 }
 
+let pFoto='', editFoto='';
+function avSrcOf(o){ return (o&&o.foto) || ((o&&AVATARS[o.avatarId])?AVATARS[o.avatarId].src:''); }
+function onFotoFile(inp,isEdit){
+  const f=inp.files&&inp.files[0]; inp.value='';
+  const err=document.getElementById(isEdit?'e-foto-err':'p-foto-err'); err.textContent='';
+  if(!f) return;
+  if(!/^image\//.test(f.type)){ err.textContent='Escolha um arquivo de imagem.'; return; }
+  const rd=new FileReader();
+  rd.onerror=()=>{ err.textContent='Não foi possível ler a imagem.'; };
+  rd.onload=()=>{
+    const im=new Image();
+    im.onerror=()=>{ err.textContent='Imagem inválida ou formato não suportado.'; };
+    im.onload=()=>{
+      const S=256, c=document.createElement('canvas'); c.width=c.height=S;
+      const m=Math.min(im.width,im.height), sx=(im.width-m)/2, sy=(im.height-m)/2;
+      c.getContext('2d').drawImage(im,sx,sy,m,m,0,0,S,S);
+      const data=c.toDataURL('image/jpeg',0.82);
+      if(isEdit){ editFoto=data; document.getElementById('edit-avatar-preview').src=data;
+        document.querySelectorAll('#edit-av-male .av-opt, #edit-av-female .av-opt').forEach(e=>e.classList.remove('selected')); }
+      else { pFoto=data; document.querySelectorAll('#av-male-grid .av-opt, #av-female-grid .av-opt').forEach(e=>e.classList.remove('selected')); }
+      refreshFotoUI();
+    };
+    im.src=rd.result;
+  };
+  rd.readAsDataURL(f);
+}
+function clearFoto(isEdit){
+  if(isEdit){ editFoto=''; document.getElementById('edit-avatar-preview').src=AVATARS[editSelectedAvatar].src;
+    document.querySelectorAll('#edit-av-male .av-opt, #edit-av-female .av-opt').forEach(el=>el.classList.toggle('selected',+el.dataset.avid===editSelectedAvatar)); }
+  else { pFoto=''; document.querySelectorAll('#av-male-grid .av-opt, #av-female-grid .av-opt').forEach(el=>el.classList.toggle('selected',+el.dataset.avid===pSelectedAvatar)); }
+  refreshFotoUI();
+}
+function refreshFotoUI(){
+  const pv=document.getElementById('p-foto-prev');
+  if(pv){ pv.src=pFoto||''; pv.classList.toggle('on',!!pFoto); }
+  const a=document.getElementById('p-foto-rm'); if(a) a.classList.toggle('on',!!pFoto);
+  const b=document.getElementById('e-foto-rm'); if(b) b.classList.toggle('on',!!editFoto);
+}
 function pickAvatar(id){
+  pFoto=''; refreshFotoUI();
   pSelectedAvatar = id;
   document.querySelectorAll('#av-male-grid .av-opt, #av-female-grid .av-opt')
     .forEach(el => el.classList.toggle('selected', +el.dataset.avid === id));
 }
 
 function editPickAvatar(id){
-  editSelectedAvatar = id;
+  editSelectedAvatar = id; editFoto=''; refreshFotoUI();
   document.querySelectorAll('#edit-av-male .av-opt, #edit-av-female .av-opt')
     .forEach(el => el.classList.toggle('selected', +el.dataset.avid === id));
   document.getElementById('edit-avatar-preview').src = AVATARS[id].src;
@@ -812,11 +871,11 @@ async function pFinish(){
   const bday = document.getElementById('inp-bday').value;
   const err = document.getElementById('fin-err'); err.textContent='';
   if(!pLogin){ showCreate(); return; }
-  profile = { nome, sobrenome: sobre, avatarId: pSelectedAvatar, gender: pSelectedGender, birthday: bday };
+  profile = { nome, sobrenome: sobre, avatarId: pSelectedAvatar, foto: pFoto, gender: pSelectedGender, birthday: bday };
   try{
     const agora=new Date().toISOString();
     await firebase.firestore().collection('usuarios').doc(pLogin).set({
-      login:pLogin, senha:pPass, nome, sobrenome:sobre, avatarId:pSelectedAvatar, genero:pSelectedGender, aniversario:bday,
+      login:pLogin, senha:pPass, nome, sobrenome:sobre, avatarId:pSelectedAvatar, foto:pFoto, genero:pSelectedGender, aniversario:bday,
       criadoEm:agora, ultimoAcesso:agora, acessoAnterior:'', totalAcessos:1
     });
     await firebase.firestore().collection('usuarios').doc(pLogin).collection('acessos').add({ts:agora});
@@ -834,7 +893,7 @@ function applyProfile(){
   const full = profile.nome + (profile.sobrenome ? ' '+profile.sobrenome : '');
   // Header avatar
   const img = document.getElementById('header-avatar-img');
-  if(img) img.src = AVATARS[profile.avatarId || 0].src;
+  if(img) img.src = avSrcOf(profile);
   const uname = document.getElementById('header-username');
   if(uname) uname.textContent = profile.nome || '–';
   document.title = 'Mariuá — ' + full;
@@ -863,10 +922,12 @@ function openEditProfile(){
   document.getElementById('edit-bday').value = profile.birthday || '';
   editSelectedAvatar = profile.avatarId || 0;
   editSelectedGender = profile.gender || '';
-  document.getElementById('edit-avatar-preview').src = AVATARS[editSelectedAvatar].src;
+  editFoto = profile.foto || '';
+  document.getElementById('edit-avatar-preview').src = editFoto || AVATARS[editSelectedAvatar].src;
+  refreshFotoUI();
   // Mark selected
   document.querySelectorAll('#edit-av-male .av-opt, #edit-av-female .av-opt')
-    .forEach(el => el.classList.toggle('selected', +el.dataset.avid === editSelectedAvatar));
+    .forEach(el => el.classList.toggle('selected', !editFoto && +el.dataset.avid === editSelectedAvatar));
   ['M','F','O'].forEach(x => document.getElementById('egb-'+x).classList.toggle('selected',x===editSelectedGender));
   document.getElementById('edit-login-line').textContent = 'Login: ' + (localStorage.getItem('mariua_login')||'–');
   document.getElementById('edit-modal').classList.remove('hidden');
@@ -880,10 +941,12 @@ function saveEditProfile(){
   profile.nome = document.getElementById('edit-nome').value.trim() || profile.nome;
   profile.sobrenome = document.getElementById('edit-sobrenome').value.trim();
   profile.avatarId = editSelectedAvatar;
+  profile.foto = editFoto;
   profile.gender = editSelectedGender;
   profile.birthday = document.getElementById('edit-bday').value;
   localStorage.setItem('mariua_profile', JSON.stringify(profile));
-  try{ const l=localStorage.getItem('mariua_login'); if(l&&window._fbReady) firebase.firestore().collection('usuarios').doc(l).set({nome:profile.nome,sobrenome:profile.sobrenome,avatarId:profile.avatarId,genero:profile.gender,aniversario:profile.birthday},{merge:true}); }catch(e){}
+  try{ const l=localStorage.getItem('mariua_login'); if(l&&window._fbReady) firebase.firestore().collection('usuarios').doc(l).set({nome:profile.nome,sobrenome:profile.sobrenome,avatarId:profile.avatarId,foto:profile.foto||'',genero:profile.gender,aniversario:profile.birthday},{merge:true}); }catch(e){}
+  if(window._reRegistrarPresenca) window._reRegistrarPresenca();
   closeEditProfile();
   applyProfile();
 }
@@ -2809,7 +2872,7 @@ function admRenderManage(){
     .sort((a,b)=>(b.ultimoAcesso||'').localeCompare(a.ultimoAcesso||''));
   if(!list.length){ el.innerHTML='<div style="text-align:center;color:rgba(255,255,255,.3);padding:20px">Nenhum usuário encontrado</div>'; return; }
   el.innerHTML=list.map(u=>{
-    const av=(typeof AVATARS!=='undefined'&&AVATARS[u.avatarId])?AVATARS[u.avatarId].src:'';
+    const av=u.foto||((typeof AVATARS!=='undefined'&&AVATARS[u.avatarId])?AVATARS[u.avatarId].src:'');
     return `<div class="user-row" id="urow-${u.id}">
       <img src="${av}" onerror="this.style.background='#0f4a37';this.removeAttribute('src')">
       <div class="user-info">
@@ -2878,7 +2941,7 @@ async function loadAdminData(){
     } else {
       todayEl.innerHTML = todayUsers.map(d=>{
         const u = d.data();
-        const av = (typeof AVATARS !== 'undefined' && AVATARS[u.avatarId]) ? AVATARS[u.avatarId].src : '';
+        const av = u.foto || ((typeof AVATARS !== 'undefined' && AVATARS[u.avatarId]) ? AVATARS[u.avatarId].src : '');
         return `<div class="user-row">
           <img src="${av}" onerror="this.style.background='#0f4a37';this.removeAttribute('src')">
           <div class="user-info">
@@ -2922,13 +2985,13 @@ async function adminDeleteUser(uid){
     // Presence (temporary)
     const presRef = _db.collection('presenca').doc(uid);
     const AVIDS = typeof AVATARS !== 'undefined' ? AVATARS : [];
-    const avSrc = (profile && AVIDS[profile.avatarId]) ? AVIDS[profile.avatarId].src : '';
+    const curAv = ()=>{ const pr=JSON.parse(localStorage.getItem('mariua_profile')||'null'); return (pr&&pr.foto)||((pr&&AVIDS[pr.avatarId])?AVIDS[pr.avatarId].src:''); };
     
     function registrar(){
       presRef.set({
         ts: Date.now(),
         nome: (profile&&profile.nome)||'Usuário',
-        avatar: avSrc
+        avatar: curAv()
       });
     }
     registrar();
