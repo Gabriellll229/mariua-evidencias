@@ -396,6 +396,7 @@ body.dark .sidebar-item.active{background:#1a3028;color:var(--teal-mid)}
 .tn2-h .sub{font-size:12px;font-weight:600;color:#6b7c86;letter-spacing:0}
 .tn2-h .n{margin-left:auto;font-size:26px;color:var(--ic)}
 .tn2-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.tn2-it.oc{opacity:.45}
 .tn2-it small{display:block;font-size:10.5px;font-weight:600;opacity:.7;margin-top:1px}
 .tn2-it{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:12px 14px;border-bottom:1px solid #eef3f5;border-right:1px solid #eef3f5;font-weight:700;font-size:13px;color:var(--tx)}
 .tn2-bd{font-size:11px;font-weight:800;color:#fff;padding:3px 9px;border-radius:6px;background:var(--bg);white-space:nowrap}
@@ -1571,26 +1572,29 @@ function turnoModelo(k,filtrar){
     if(filtrar&&!tnPass(tnBase(n))) return; const l=por[n];
     if(l){ const ab=l.find(x=>!x.fim&&!/fech|encerr/i.test(x.sit)); o.abriu.push({eq:n,aberto:!!ab,x:ab||l[0],enc:(l[0].resp||encMap[n]||'')}); }
     else if(just.has(n)) o.just.push({eq:n,enc:encMap[n]||'',motivo:mot[n]||''}); else o.nao.push({eq:n,enc:encMap[n]||''});
-  }); return o;
+  }); const ocs=new Set(dia.ocultas||[]); ['abriu','just','nao'].forEach(k=>o[k].forEach(i=>{ i.oc=ocs.has(i.eq); })); return o;
 }
 function turnoFiltro(t,v){ if(t==='fil'){ TN.fil=v; TN.cs='ALL'; } else TN.cs=v; turnoRender(); }
 function turnoHoje(){ TN.diaSel=null; turnoRender(); }
-function turnoJustModal(eq){
-  const a=tnAtual(); if(!a) return; const d=a.dia; d.just=d.just||[]; d.motivos=d.motivos||{}; TN._je=eq;
-  const ja=d.just.includes(eq), enc=(TN.eq.find(e=>e.equipe===eq)||{}).enc||'';
-  tnModal(`<h3>${ja?'✏️ Falta justificada':'📝 Justificar falta'}</h3><div style="font-weight:800;font-size:16px">${admEsc(eq)}</div><div style="font-size:12px;color:#6b7c86;margin-bottom:12px">${admEsc(enc)} · ${tnFmtDia(a.k)}</div>
-   <input id="tj-m" list="tj-l" value="${admEsc(d.motivos[eq]||'')}" placeholder="Motivo (ex.: Atestado médico, Folga, Férias)" style="width:100%;box-sizing:border-box;padding:10px;border-radius:8px;border:1px solid #dbe5ea;font-family:inherit">
-   <datalist id="tj-l"><option>Atestado médico</option><option>Folga</option><option>Férias</option><option>Treinamento</option><option>Falta justificada pela gestão</option></datalist>
-   <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap"><button class="tn2-b g" onclick="turnoJustSalvar()">💾 Salvar</button>${ja?'<button class="tn2-b" style="background:#d9534f;border-color:#d9534f" onclick="turnoJustRemover()">Remover justificativa</button>':''}</div>`);
+function turnoEquipeModal(eq){
+  const a=tnAtual(); if(!a) return; const d=a.dia; d.just=d.just||[]; d.motivos=d.motivos||{}; d.ocultas=d.ocultas||[]; TN._je=eq;
+  const abriu=d.itens.some(x=>x.equipe===eq), ja=d.just.includes(eq), enc=(TN.eq.find(e=>e.equipe===eq)||{}).enc||'';
+  tnModal(`<h3>${admEsc(eq)}</h3><div style="font-size:12px;color:#6b7c86;margin-bottom:12px">${admEsc(enc)} · ${tnFmtDia(a.k)}</div>`+
+   (abriu?'<div style="font-size:13px;margin-bottom:6px">✅ Esta equipe abriu turno neste dia.</div>':
+   `<div style="font-weight:700;font-size:13px;margin-bottom:4px">Situação</div>
+    <label style="display:block;padding:5px 0"><input type="radio" name="tj-st" value="nao" ${ja?'':'checked'}> 🔴 Falta</label>
+    <label style="display:block;padding:5px 0"><input type="radio" name="tj-st" value="just" ${ja?'checked':''}> 🟡 Falta justificada</label>
+    <input id="tj-m" list="tj-l" value="${admEsc(d.motivos[eq]||'')}" placeholder="Motivo (ex.: Atestado médico, Folga, Férias)" style="width:100%;box-sizing:border-box;padding:10px;border-radius:8px;border:1px solid #dbe5ea;font-family:inherit;margin-top:4px">
+    <datalist id="tj-l"><option>Atestado médico</option><option>Folga</option><option>Férias</option><option>Treinamento</option></datalist>`)+
+   `<label style="display:block;padding:12px 0 0;font-weight:700;font-size:13px"><input type="checkbox" id="tj-img" ${d.ocultas.includes(eq)?'':'checked'}> 🖼 Mostrar esta equipe na imagem</label>
+    <div style="margin-top:14px"><button class="tn2-b g" onclick="turnoEquipeSalvar()">💾 Salvar</button></div>`);
 }
-function turnoJustSalvar(){
-  const a=tnAtual(), eq=TN._je; if(!a||!eq) return; const d=a.dia; d.just=d.just||[]; d.motivos=d.motivos||{};
-  if(!d.just.includes(eq)) d.just.push(eq); d.motivos[eq]=(document.getElementById('tj-m').value||'').trim();
-  document.querySelector('.tn2-modal').remove(); turnoSalvarDia(a.k); turnoRender(); showToast('✅ Falta justificada');
-}
-function turnoJustRemover(){
-  const a=tnAtual(), eq=TN._je; if(!a||!eq) return; const d=a.dia; d.just=(d.just||[]).filter(x=>x!==eq); if(d.motivos) delete d.motivos[eq];
-  document.querySelector('.tn2-modal').remove(); turnoSalvarDia(a.k); turnoRender(); showToast('Justificativa removida');
+function turnoEquipeSalvar(){
+  const a=tnAtual(), eq=TN._je; if(!a||!eq) return; const d=a.dia; d.just=d.just||[]; d.motivos=d.motivos||{}; d.ocultas=d.ocultas||[];
+  const st=document.querySelector('input[name=tj-st]:checked');
+  if(st){ if(st.value==='just'){ if(!d.just.includes(eq)) d.just.push(eq); d.motivos[eq]=(document.getElementById('tj-m').value||'').trim(); } else { d.just=d.just.filter(x=>x!==eq); delete d.motivos[eq]; } }
+  d.ocultas=d.ocultas.filter(x=>x!==eq); if(!document.getElementById('tj-img').checked) d.ocultas.push(eq);
+  document.querySelector('.tn2-modal').remove(); turnoSalvarDia(a.k); turnoRender(); showToast('✅ Salvo');
 }
 function turnoRender(){
   const body=document.getElementById('tn2-body'); if(!body) return;
@@ -1605,14 +1609,15 @@ function turnoRender(){
   document.getElementById('tn2-info').textContent='Dia: '+tnFmtDia(a.k)+(a.k===tnKey(new Date())?' (hoje)':'');
   const card=(cls,bd,ic,tit,sub,n,inner)=>`<div class="tn2-card" style="--bd:${bd};--ic:${ic}"><div class="tn2-h" style="background:${cls}"><div class="ic">${tit[0]}</div><div>${tit[1]}${sub?`<div class="sub">${sub}</div>`:''}</div><div class="n">${n}</div></div>${inner}</div>`;
   const grid=l=>l.length?`<div class="tn2-grid">${l.join('')}</div>`:'<div class="tn2-vazio">Nenhuma equipe</div>';
-  const it=(eq,tx,bgc,badge,tip,click,sub)=>`<div class="tn2-it" style="--tx:${tx}" title="${admEsc(tip||'')}"><span>${admEsc(eq)}${sub?`<small>${admEsc(sub)}</small>`:''}</span>${click?`<button class="tn2-bd" style="--bg:${bgc}" onclick="turnoJustModal('${admEsc(eq).replace(/'/g,'')}')" title="Clique para editar a justificativa">${badge}</button>`:`<span class="tn2-bd" style="--bg:${bgc}">${badge}</span>`}</div>`;
+  const oc=new Set(a.dia.ocultas||[]);
+  const it=(eq,tx,bgc,badge,tip,sub)=>`<div class="tn2-it ${oc.has(eq)?'oc':''}" style="--tx:${tx};cursor:pointer" title="${admEsc(tip||'')}" onclick="turnoEquipeModal('${admEsc(eq).replace(/'/g,'')}')"><span>${oc.has(eq)?'🚫 ':''}${admEsc(eq)}${sub?`<small>${admEsc(sub)}</small>`:''}</span><span class="tn2-bd" style="--bg:${bgc}">${badge}</span></div>`;
   body.innerHTML=
    card('#f0f9f9','#bfe6e4','#17a58a',['✓','ABRIU TURNO'],tot?`${fech} fechado(s) · ${m.abriu.length-fech} ainda aberto(s)`:'',m.abriu.length,
-     grid(m.abriu.map(o=>it(o.eq,'#0b4f55',o.aberto?'#e8a317':'#17a58a',o.aberto?'ABERTO':'OK','Abriu '+tnHora(o.x.ini)+' · Fechou '+tnHora(o.x.fim)+(o.x.veiculo?' · '+o.x.veiculo:''),0,o.enc)))) +
-   card('#fffbf0','#f3e3b3','#e8a317',['!','FALTA JUSTIFICADA'],'Clique em JUSTIF. para editar ou remover',m.just.length,
-     grid(m.just.map(o=>it(o.eq,'#7a5a05','#e8a317','JUSTIF.','Clique para editar',1,[o.enc,o.motivo].filter(Boolean).join(' · '))))) +
-   card('#fff3f3','#f3c9c9','#d9534f',['●','NÃO ABRIU TURNO'],'Clique em FALTA para justificar',m.nao.length,
-     grid(m.nao.map(o=>it(o.eq,'#7a1f1f','#e04848','FALTA','Clique para justificar',1,o.enc))));
+     grid(m.abriu.map(o=>it(o.eq,'#0b4f55',o.aberto?'#e8a317':'#17a58a',o.aberto?'ABERTO':'OK',(o.enc?o.enc+' · ':'')+'Abriu '+tnHora(o.x.ini)+' · Fechou '+tnHora(o.x.fim)+(o.x.veiculo?' · '+o.x.veiculo:''))))) +
+   card('#fffbf0','#f3e3b3','#e8a317',['!','FALTA JUSTIFICADA'],'Clique na equipe para editar',m.just.length,
+     grid(m.just.map(o=>it(o.eq,'#7a5a05','#e8a317','JUSTIF.','Encarregado: '+(o.enc||'—'),o.motivo)))) +
+   card('#fff3f3','#f3c9c9','#d9534f',['●','NÃO ABRIU TURNO'],'Clique na equipe para justificar ou tirar da imagem',m.nao.length,
+     grid(m.nao.map(o=>it(o.eq,'#7a1f1f','#e04848','FALTA','Encarregado: '+(o.enc||'—')))));
   const d=a.dia; document.getElementById('tn2-foot').textContent=[d.contrato||'OBRAS - BA',d.processo||'BA_PROCESSO',tot+' equipes ativas',tnFmtDia(a.k)].join(' | ');
   renderChips();
 }
@@ -1669,9 +1674,9 @@ function turnoRelFaltas(){
 async function turnoImagem(){
   const a=tnAtual(); if(!a){ showToast('Suba um relatório primeiro'); return; }
   try{ await document.fonts.load('800 40px Barlow'); await document.fonts.load('700 18px Barlow'); }catch(e){}
-  const m=turnoModelo(a.k,true), F="Barlow,Arial,sans-serif", W=1240, P=28, CW=W-2*P, IN=22, GAP=10, COLS=4, IW=(CW-2*IN-(COLS-1)*GAP)/COLS, IH=44;
+  const m0=turnoModelo(a.k,true), m={abriu:m0.abriu.filter(x=>!x.oc),just:m0.just.filter(x=>!x.oc),nao:m0.nao.filter(x=>!x.oc)}, F="Barlow,Arial,sans-serif", W=1240, P=28, CW=W-2*P, IN=22, GAP=10, COLS=4, IW=(CW-2*IN-(COLS-1)*GAP)/COLS, IH=44;
   const secs=[['abriu','ABRIU TURNO','#f0f9f9','#bfe6e4','#17a58a','#0b4f55','#eaf6f6',o=>o.aberto?['ABERTO','#e8a317']:['OK','#17a58a']],['just','FALTA JUSTIFICADA','#fffbf0','#f3e3b3','#e8a317','#7a5a05','#fdf6e3',()=>['JUSTIF.','#e8a317']],['nao','NÃO ABRIU TURNO','#fff3f3','#f3c9c9','#d9534f','#7a1f1f','#fdeeee',()=>['FALTA','#e04848']]].filter(s=>m[s[0]].length||s[0]==='abriu'||s[0]==='nao');
-  const ihOf=k=>k==='abriu'?IH:60, hSec=(l,k)=>82+30+Math.max(1,Math.ceil(l.length/COLS))*(ihOf(k)+GAP)+10;
+  const ihOf=k=>(k==='just'&&m.just.some(i=>i.motivo))?60:IH, hSec=(l,k)=>82+30+Math.max(1,Math.ceil(l.length/COLS))*(ihOf(k)+GAP)+10;
   const H=215+secs.reduce((t,s)=>t+hSec(m[s[0]],s[0])+28,0)+90;
   const c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
   const rr=(X,Y,w,h,r)=>{ x.beginPath(); x.moveTo(X+r,Y); x.arcTo(X+w,Y,X+w,Y+h,r); x.arcTo(X+w,Y+h,X,Y+h,r); x.arcTo(X,Y+h,X,Y,r); x.arcTo(X,Y,X+w,Y,r); x.closePath(); };
@@ -1685,17 +1690,17 @@ async function turnoImagem(){
   x.fillText('RELATÓRIO: '+ie.toLocaleDateString('pt-BR')+' · '+ie.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+' · BA'+filt,W/2,118); if('letterSpacing' in x) x.letterSpacing='0px';
   x.textAlign='left'; let y=190;
   secs.forEach(([k,tit,bg,bd,cor,tx,ibg,bf])=>{
-    const l=m[k], h=hSec(l,k), IH2=ihOf(k), dois=k!=='abriu';
+    const l=m[k], h=hSec(l,k), IH2=ihOf(k);
     x.fillStyle='#fff'; rr(P,y,CW,h,16); x.fill(); x.save(); rr(P,y,CW,h,16); x.clip(); x.fillStyle=bg; x.fillRect(P,y,CW,82); x.fillStyle=bd; x.fillRect(P,y+81,CW,2); x.restore();
     x.fillStyle=cor; rr(P+22,y+26,30,30,8); x.fill(); x.fillStyle='#fff'; x.font='800 20px '+F; x.textAlign='center'; x.fillText(k==='abriu'?'✓':k==='just'?'!':'●',P+37,y+48);
     x.textAlign='left'; x.fillStyle='#1a2a33'; x.font='800 28px '+F; x.fillText(tit,P+66,y+51);
     x.textAlign='right'; x.fillStyle=cor; x.font='800 38px '+F; x.fillText(String(l.length),P+CW-24,y+55); x.textAlign='left';
-    l.forEach((it,i)=>{ const ix=P+IN+(i%COLS)*(IW+GAP), iy=y+82+22+Math.floor(i/COLS)*(IH2+GAP);
+    l.forEach((it,i)=>{ const ix=P+IN+(i%COLS)*(IW+GAP), iy=y+82+22+Math.floor(i/COLS)*(IH2+GAP), dois=k==='just'&&!!it.motivo;
       x.fillStyle=ibg; rr(ix,iy,IW,IH2,8); x.fill(); x.fillStyle=cor; x.fillRect(ix,iy+3,4,IH2-6);
       const [bt,bc]=bf(it); x.font='800 13px '+F; const bw=x.measureText(bt).width+22, by=dois?iy+10:iy+(IH2-26)/2;
       x.fillStyle=bc; rr(ix+IW-bw-10,by,bw,26,6); x.fill(); x.fillStyle='#fff'; x.textAlign='center'; x.fillText(bt,ix+IW-bw/2-10,by+18); x.textAlign='left';
       x.fillStyle=tx; x.font='700 17px '+F; let nm=it.eq; while(x.measureText(nm).width>IW-bw-40&&nm.length>3) nm=nm.slice(0,-2); if(nm!==it.eq) nm+='…'; x.fillText(nm,ix+18,dois?iy+28:iy+IH2/2+6);
-      if(dois){ x.font='600 13px '+F; x.fillStyle=tx; x.globalAlpha=.75; let sb=[it.enc,it.motivo].filter(Boolean).join(' · '); while(x.measureText(sb).width>IW-34&&sb.length>3) sb=sb.slice(0,-2); x.fillText(sb,ix+18,iy+48); x.globalAlpha=1; } });
+      if(dois){ x.font='600 13px '+F; x.fillStyle=tx; x.globalAlpha=.75; let sb=it.motivo; while(x.measureText(sb).width>IW-34&&sb.length>3) sb=sb.slice(0,-2); x.fillText(sb,ix+18,iy+48); x.globalAlpha=1; } });
     y+=h+28;
   });
   x.textAlign='center'; x.fillStyle='#9aa8b0'; x.font='700 17px '+F; if('letterSpacing' in x) x.letterSpacing='1px'; x.fillText('Mariuá Construção e Energia · OBRAS BA',W/2,H-34);
