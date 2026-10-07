@@ -1546,14 +1546,16 @@ function turnoUpload(inp){
     const cont={}; itens.forEach(x=>{ const d=tnDt(x.ini); if(d){ const k=tnKey(d); cont[k]=(cont[k]||0)+1; } });
     const k=Object.keys(cont).sort((a,b)=>cont[b]-cont[a])[0]||tnKey(new Date());
     const ant=TN.dias[k];
-    TN.dias[k]={data:k,arquivo:f.name,importadoEm:new Date().toISOString(),contrato:g(rows[1],'ct'),processo:g(rows[1],'pr'),itens,just:ant?ant.just||[]:[]};
-    TN.diaSel=null; turnoSalvarDia(k); turnoRender(); showToast('✅ Relatório de '+tnFmtDia(k)+' carregado!');
+    TN.dias[k]={data:k,arquivo:f.name,importadoEm:new Date().toISOString(),contrato:g(rows[1],'ct'),processo:g(rows[1],'pr'),itens,ausentes:turnoAusentes(itens),ativas:TN.eq.length,just:ant?ant.just||[]:[],motivos:ant?ant.motivos||{}:{},ocultas:ant?ant.ocultas||[]:[]};
+    TN.diaSel=null; TN._avisoSalvo=1; turnoSalvarDia(k); turnoRender(); const mm=turnoModelo(k,false); showToast('✅ '+tnFmtDia(k)+': '+mm.abriu.length+' abriram · '+(mm.nao.length+mm.just.length)+' não abriram');
   };
   rd.readAsArrayBuffer(f);
 }
 function turnoLocal(){ try{ const ks=Object.keys(TN.dias).sort().slice(-60), d={}; ks.forEach(k=>d[k]=TN.dias[k]); localStorage.setItem('mariua_turno2',JSON.stringify({eq:TN.eq,dias:d})); }catch(e){} }
 function turnoSalvarEq(){ turnoLocal(); if(window._fbReady){ try{ firebase.firestore().collection('turnos').doc('equipes').set({eq:TN.eq}); }catch(e){} } }
-function turnoSalvarDia(k){ turnoLocal(); if(window._fbReady){ try{ firebase.firestore().collection('turnos').doc('dia_'+k).set(TN.dias[k]); }catch(e){ console.warn(e); } } }
+function turnoSalvarDia(k){ turnoLocal(); const av=TN._avisoSalvo; TN._avisoSalvo=0;
+  if(window._fbReady){ firebase.firestore().collection('turnos').doc('dia_'+k).set(TN.dias[k]).then(()=>{ if(av) showToast('☁️ Dia '+tnFmtDia(k)+' salvo no banco de dados'); }).catch(e=>showToast('⚠️ Erro ao salvar no banco: '+e.message)); }
+  else if(av) showToast('⚠️ Sem conexão com o banco: salvo só neste navegador'); }
 async function turnoInit(){
   if(!TN._loc){ TN._loc=1; try{ const l=JSON.parse(localStorage.getItem('mariua_turno2')||'null'); if(l){ TN.eq=l.eq||[]; TN.dias=l.dias||{}; } }catch(e){} if(!TN.eq.some(e=>e.enc)) TN.eq=TN_ROSTER.map(e=>({...e})); }
   turnoRender();
@@ -1564,10 +1566,14 @@ async function turnoInit(){
       turnoLocal(); turnoRender(); }catch(e){ console.warn(e); } }
 }
 function tnPass(b){ if(TN.cs!=='ALL'&&b!==TN.cs) return false; if(TN.fil!=='ALL'&&(TN_FIL[b]||'OUT')!==TN.fil) return false; return true; }
+function turnoAusentes(itens){
+  const eqs=new Set(itens.map(x=>x.equipe)), resp=new Set(itens.map(x=>tnN(x.resp)).filter(Boolean));
+  return TN.eq.filter(e=>!eqs.has(e.equipe)&&!(e.enc&&resp.has(tnN(e.enc)))).map(e=>({equipe:e.equipe,enc:e.enc||''}));
+}
 function turnoModelo(k,filtrar){
   const dia=TN.dias[k], por={}; dia.itens.forEach(x=>{ (por[x.equipe]=por[x.equipe]||[]).push(x); });
-  const nomes=new Set(TN.eq.map(e=>e.equipe)); Object.keys(por).forEach(n=>nomes.add(n));
-  const just=new Set(dia.just||[]), mot=dia.motivos||{}, encMap={}; TN.eq.forEach(e=>encMap[e.equipe]=e.enc||''); const o={abriu:[],just:[],nao:[]};
+  const aus=dia.ausentes||turnoAusentes(dia.itens), nomes=new Set(Object.keys(por)); aus.forEach(e=>nomes.add(e.equipe));
+  const just=new Set(dia.just||[]), mot=dia.motivos||{}, encMap={}; TN.eq.forEach(e=>encMap[e.equipe]=e.enc||''); aus.forEach(e=>{ if(e.enc) encMap[e.equipe]=e.enc; }); const o={abriu:[],just:[],nao:[]};
   [...nomes].sort((a,b)=>a.localeCompare(b)).forEach(n=>{
     if(filtrar&&!tnPass(tnBase(n))) return; const l=por[n];
     if(l){ const ab=l.find(x=>!x.fim&&!/fech|encerr/i.test(x.sit)); o.abriu.push({eq:n,aberto:!!ab,x:ab||l[0],enc:(l[0].resp||encMap[n]||'')}); }
@@ -1656,12 +1662,13 @@ function turnoDias(){
 function turnoMedias(){
   const ks=Object.keys(TN.dias); if(!ks.length){ showToast('Suba um relatório primeiro'); return; }
   const linhas=Object.keys(TN_CS).map(b=>{
-    const nomes=TN.eq.map(e=>e.equipe).filter(n=>tnBase(n)===b); if(!nomes.length) return '';
-    let soma=0; ks.forEach(k=>{ const ab=new Set(TN.dias[k].itens.map(x=>x.equipe)); soma+=nomes.filter(n=>ab.has(n)).length/nomes.length; });
-    const pct=Math.round(soma/ks.length*100);
+    let soma=0, n=0;
+    ks.forEach(k=>{ const d=TN.dias[k], ab=new Set(d.itens.map(x=>x.equipe)), ops=[...ab].filter(e=>tnBase(e)===b).length, fal=(d.ausentes||turnoAusentes(d.itens)).filter(e=>tnBase(e.equipe)===b).length;
+      if(ops+fal>0){ soma+=ops/(ops+fal); n++; } });
+    if(!n) return ''; const pct=Math.round(soma/n*100);
     return `<div class="tn2-med">${TN_CS[b].toUpperCase()} (${b}) — ${pct}% abriram turno<div class="tr"><i style="width:${pct}%"></i></div></div>`;
   }).join('');
-  tnModal('<h3>📊 Média de abertura por base</h3><div style="font-size:12px;color:#6b7c86">Calculada sobre '+ks.length+' dia(s) salvo(s) e as equipes cadastradas.</div>'+linhas);
+  tnModal('<h3>📊 Média de abertura por base</h3><div style="font-size:12px;color:#6b7c86">Calculada sobre '+ks.length+' dia(s) salvo(s). Quem não aparece no CSV conta como não abriu.</div>'+linhas);
 }
 function turnoRelFaltas(){
   const a=tnAtual(); if(!a){ showToast('Suba um relatório primeiro'); return; }
