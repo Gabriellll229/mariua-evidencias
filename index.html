@@ -379,40 +379,43 @@ body.dark .sidebar-item.active{background:#1a3028;color:var(--teal-mid)}
 .user-row{flex-wrap:wrap}.user-row .user-info{min-width:150px}
 .user-row .adm-hist{flex-basis:100%}
 
-/* ===== ABA TURNO (painel de controle) ===== */
-#page-turno{background:#06100b;color:#e8fff4;padding:22px}
-.tn-top{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;margin-bottom:18px}
-.tn-title{font-family:'Courier New',monospace;font-size:24px;font-weight:800;letter-spacing:3px;color:#3ddc97}
-.tn-sub{font-size:12px;color:#7fae98;margin-top:4px}
-.tn-btns{display:flex;gap:8px;flex-wrap:wrap}
-.tn-btn{padding:10px 16px;border-radius:6px;border:1.5px solid #1D9E75;background:transparent;color:#3ddc97;font-weight:700;font-size:12px;cursor:pointer;letter-spacing:.5px}
-.tn-btn:hover{background:#1D9E75;color:#04150e}
-.tn-btn.pri{background:#1D9E75;color:#04150e}
-.tn-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:20px}
-.tn-kpi{background:#0b1d15;border:1px solid #14382a;border-left:5px solid var(--c);border-radius:6px;padding:12px 14px}
-.tn-kpi b{display:block;font-family:'Courier New',monospace;font-size:30px;color:var(--c)}
-.tn-kpi span{font-size:11px;color:#7fae98;text-transform:uppercase;letter-spacing:1px}
-.tn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:16px;align-items:start}
-.tn-col{background:#0b1d15;border:1px solid #14382a;border-radius:8px;overflow:hidden}
-.tn-colhead{padding:14px 16px;background:#0f2a1e;border-bottom:2px solid #1D9E75;display:flex;justify-content:space-between;align-items:center}
-.tn-colhead h3{margin:0;font-family:'Courier New',monospace;font-size:20px;color:#fff;letter-spacing:2px}
-.tn-colhead small{display:block;font-size:11px;color:#7fae98;letter-spacing:0}
-.tn-pills{display:flex;gap:5px}
-.tn-pill{font-family:'Courier New',monospace;font-weight:800;font-size:13px;padding:3px 8px;border-radius:4px;background:rgba(255,255,255,.06);color:var(--c);border:1px solid var(--c)}
-.tn-sec{padding:8px 16px 4px;font-size:11px;font-weight:800;letter-spacing:1.5px;color:var(--c);text-transform:uppercase;border-top:1px solid #14382a;background:rgba(255,255,255,.02)}
-.tn-item{display:grid;grid-template-columns:10px 1fr auto;gap:10px;align-items:center;padding:9px 16px;border-top:1px solid #0f2a1e;font-size:12.5px}
-.tn-dot{width:10px;height:10px;border-radius:50%;background:var(--c);box-shadow:0 0 8px var(--c)}
-.tn-item .nm{font-weight:700;color:#fff}
-.tn-item .eq{font-size:10.5px;color:#7fae98}
-.tn-item .hr{font-family:'Courier New',monospace;font-size:11.5px;color:#cfeee0;text-align:right}
-.tn-item .x{background:none;border:none;color:#ff7a7a;cursor:pointer;font-size:13px}
-.tn-empty{padding:30px;text-align:center;color:#7fae98;border:1px dashed #1D9E75;border-radius:8px}
-.tn-eqbox{margin-top:20px;background:#0b1d15;border:1px solid #14382a;border-radius:8px;padding:14px}
-.tn-chip{display:inline-flex;gap:6px;align-items:center;margin:3px;padding:4px 9px;border-radius:14px;background:#0f2a1e;border:1px solid #14382a;font-size:11px;color:#cfeee0}
-.tn-chip button{background:none;border:none;color:#ff7a7a;cursor:pointer}
-.tn-add{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-.tn-add input{flex:1;min-width:180px;padding:8px 10px;border-radius:6px;border:1px solid #14382a;background:#06100b;color:#fff}
+/* ===== ABA TURNOS ===== */
+#page-turno{background:#eef3f5;font-family:'Barlow',Arial,sans-serif;color:#1a2a33;padding:0 0 90px}
+.tn2-bar{background:#fff;padding:10px 16px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-bottom:1px solid #e3eaee}
+.tn2-lab{font-size:11px;font-weight:800;letter-spacing:1.5px;color:#7b8c96;margin-right:4px}
+.tn2-chip{padding:6px 14px;border-radius:20px;border:1px solid #dbe5ea;background:#eef3f5;color:#6b7c86;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit}
+.tn2-chip.on{background:#0e6f73;border-color:#0e6f73;color:#fff}
+.tn2-dark{background:#1a2b3a;padding:12px 16px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-bottom:2px solid #1D9E75}
+.tn2-dark .tn2-lab{color:#b7c6d0}
+.tn2-b{padding:7px 14px;border-radius:8px;border:1px solid #3a4f61;background:#243847;color:#fff;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit}
+.tn2-b.g{background:#1D9E75;border-color:#1D9E75}
+.tn2-body{padding:14px 16px}
+.tn2-card{border-radius:14px;margin-bottom:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);background:#fff}
+.tn2-h{display:flex;align-items:center;gap:10px;padding:14px 18px;font-weight:800;font-size:20px;letter-spacing:.5px;border-bottom:1px solid var(--bd)}
+.tn2-h .ic{width:28px;height:28px;border-radius:7px;background:var(--ic);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px}
+.tn2-h .sub{font-size:12px;font-weight:600;color:#6b7c86;letter-spacing:0}
+.tn2-h .n{margin-left:auto;font-size:26px;color:var(--ic)}
+.tn2-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.tn2-it{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:12px 14px;border-bottom:1px solid #eef3f5;border-right:1px solid #eef3f5;font-weight:700;font-size:13px;color:var(--tx)}
+.tn2-bd{font-size:11px;font-weight:800;color:#fff;padding:3px 9px;border-radius:6px;background:var(--bg);white-space:nowrap}
+button.tn2-bd{border:none;cursor:pointer;font-family:inherit}
+.tn2-vazio{padding:22px;text-align:center;font-size:13px;font-weight:600;color:#aab6bd}
+.tn2-foot{text-align:center;font-size:12px;color:#9aa8b0;font-weight:600;padding:6px 0 18px}
+.tn2-fab{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#d9534f;color:#fff;border:none;border-radius:30px;padding:12px 24px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25);z-index:50;font-family:inherit}
+.tn2-cam{position:fixed;bottom:22px;right:22px;width:48px;height:48px;border-radius:50%;background:#4a7fb5;color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25);z-index:50}
+.tn2-eq{margin:0 16px;background:#fff;border-radius:12px;padding:12px 16px}
+.tn2-eq summary{cursor:pointer;font-weight:800;font-size:13px;color:#0e6f73}
+.tn2-eq .ch{display:inline-flex;gap:6px;margin:3px;padding:3px 9px;border-radius:14px;background:#eef3f5;font-size:11px;font-weight:700}
+.tn2-eq .ch button{background:none;border:none;color:#d9534f;cursor:pointer}
+.tn2-eq textarea,.tn2-eq input{width:100%;box-sizing:border-box;padding:8px;border:1px solid #dbe5ea;border-radius:8px;margin-top:8px;font-family:inherit}
+.tn2-modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9990;display:flex;align-items:center;justify-content:center;padding:16px}
+.tn2-mc{background:#fff;color:#1a2a33;border-radius:14px;padding:20px;max-width:520px;width:100%;max-height:80vh;overflow-y:auto;font-family:'Barlow',Arial,sans-serif}
+.tn2-mc h3{margin:0 0 12px;font-size:18px}
+.tn2-dia{display:flex;justify-content:space-between;padding:10px 12px;border-radius:8px;cursor:pointer;font-weight:700;font-size:14px}
+.tn2-dia:hover{background:#eef3f5}
+.tn2-med{margin:10px 0;font-weight:700;font-size:13px}.tn2-med .tr{height:12px;background:#e3eaee;border-radius:6px;margin-top:4px}.tn2-med .tr i{display:block;height:100%;background:#1D9E75;border-radius:6px}
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -1267,25 +1270,26 @@ function saveEditProfile(){
 
 <!-- ==================== OBRAS SIMPLIFICADAS ==================== -->
 <div class="page" id="page-turno">
-  <div class="tn-top">
-    <div>
-      <div class="tn-title">⏱ CONTROLE DE TURNOS</div>
-      <div class="tn-sub" id="tn-info">Nenhum relatório carregado. Suba o CSV de consulta de turno.</div>
-    </div>
-    <div class="tn-btns">
-      <button class="tn-btn pri" onclick="document.getElementById('tn-file').click()">⬆ Subir relatório CSV</button>
-      <button class="tn-btn" onclick="turnoImagem()">🖼 Baixar imagem</button>
-      <input type="file" id="tn-file" accept=".csv,text/csv" style="display:none" onchange="turnoUpload(this)">
-    </div>
+  <div class="tn2-bar"><span class="tn2-lab">FILIAL:</span><span id="tn2-fil" style="display:contents"></span></div>
+  <div class="tn2-bar"><span class="tn2-lab">CENTRO DE SERVIÇO:</span><span id="tn2-cs" style="display:contents"></span></div>
+  <div class="tn2-dark"><span class="tn2-lab">CONSULTAR DIA:</span>
+    <button class="tn2-b" onclick="turnoDias()">📅 Dias salvos</button>
+    <button class="tn2-b" onclick="turnoHoje()">↩ HOJE</button>
+    <button class="tn2-b g" onclick="turnoMedias()">📊 Médias por base</button>
+    <span style="flex:1"></span>
+    <span id="tn2-info" class="tn2-lab" style="margin:0"></span>
+    <button class="tn2-b g" onclick="document.getElementById('tn-file').click()">⬆ Subir relatório CSV</button>
+    <input type="file" id="tn-file" accept=".csv,text/csv" style="display:none" onchange="turnoUpload(this)">
   </div>
-  <div class="tn-kpis" id="tn-kpis"></div>
-  <div class="tn-grid" id="tn-grid"></div>
-  <div class="tn-eqbox">
-    <div style="font-size:12px;font-weight:700;color:#3ddc97;letter-spacing:1px">EQUIPES CADASTRADAS (usadas para saber quem NÃO abriu turno)</div>
-    <div style="font-size:11px;color:#7fae98;margin:4px 0 8px">Entram automaticamente quando aparecem em um relatório. Remova as que não existem mais ou adicione manualmente no formato NOME-BASE (ex.: JOAO-JAC).</div>
-    <div id="tn-chips"></div>
-    <div class="tn-add"><input id="tn-new" placeholder="NOME-BASE (ex.: JOAO-JAC)" onkeydown="if(event.key==='Enter')turnoAddEquipe()"><button class="tn-btn" onclick="turnoAddEquipe()">+ Adicionar</button></div>
-  </div>
+  <div class="tn2-body" id="tn2-body"></div>
+  <div class="tn2-foot" id="tn2-foot"></div>
+  <details class="tn2-eq"><summary>⚙️ Equipes cadastradas (base para saber quem NÃO abriu)</summary>
+    <div id="tn2-chips" style="margin-top:8px"></div>
+    <textarea id="tn2-lista" rows="3" placeholder="Colar várias equipes de uma vez (uma por linha ou separadas por vírgula). Formato: NOME-BASE, ex.: JOAO-JAC"></textarea>
+    <button class="tn2-b g" style="margin-top:8px" onclick="turnoAddLista()">+ Adicionar equipes</button>
+  </details>
+  <button class="tn2-fab" onclick="turnoRelFaltas()">📊 RELATÓRIO DE FALTAS</button>
+  <button class="tn2-cam" onclick="turnoImagem()" title="Baixar imagem">📷</button>
 </div>
 
 <div class="page" id="page-obras">
@@ -1504,13 +1508,14 @@ function toggleDark(){
 ================================================================ */
 
 /* ===== TURNOS ===== */
-const TN_BASES={JAC:'Jacobina',IRC:'Irecê',SRR:'Serrinha'};
-const TN_COR={aberto:'#ffb347',fechado:'#3ddc97',nao:'#ff6b6b'};
-let TN={rel:null,eq:[]};
-function tnBase(e){ const x=(e||'').split('-'); return x.length>1?x[x.length-1].trim().toUpperCase():'OUTROS'; }
-function tnNomeEq(e){ const x=(e||'').split('-'); return x.length>1?x.slice(0,-1).join('-').trim():e; }
+const TN_ROSTER="ADILTON-FSA,AILVO-FSA,ALAN-IRC,ALEX-IRC,ANDERSON-IRC,ANDRE-JAC,ATHOS-IRC,CAIQUE-JAC,CARLEY-IRC,CICERO-IRC,CILSON-JAC,CLAUDEMIRO-SRR,CLEBSON-JAC,DANILO-IRC,DEJALMA-IRC,DEMETRIO-FSA,DIOGO-JAC,DOUGLAS-JAC,EDER-IRC,EDILSON HERMOGENES-SRR,EDILSON SOUZA-SRR,EDIVALDO-SRR,EDMILSON-IRC,EDSON-IRC,EDUARDO-IRC,ELIEZER-IRC,EMERSON-JAC,ENES-IRC,ERONILSON-JAC,ESMERALDO-SRR,FABIANO-JAC,FELIPE-IRC,GABRIEL-IRC,GERALDO-JAC,GIVANILTON-SRR,HERCULES-FSA,IZAC-JAC,JAILSON-IRC,JAILTON-JAC,JARBAS-IRC,JEORGE-IRC,JOAO-FSA,JOAO-JAC,JOSE-FSA,JOSELIO-FSA,JULIO-JAC,JULIVAL-JAC,LEANDRO-SRR,LUCIANO-SRR,LUIZ-JAC,MARCOS-SRR,MENEZES-IRC,NADSON-FSA,NAILSON-SRR,OSIMAR-SRR,RENILSON-FSA,REVERTON-IRC,RODRIGO-JAC,ROGERIO-SRR,ROMERO-IRC,TIAGO-IRC,UBERDAN-SRR,UELTON-JAC,VAGNO-IRC,VALDEIR-IRC,VALMIR-JAC,VALMIR-SRR,VANILSON-IRC,WASHINGTON MIRANDA-IRC,WASHINGTON-IRC,WESLEY-IRC,WILIAN-IRC".split(',');
+const TN_CS={IRC:'Irecê',JAC:'Jacobina',FSA:'Feira de Santana',SRR:'Serrinha'};
+const TN_FIL={IRC:'IRC',JAC:'JAC',FSA:'FSA',SRR:'FSA'}, TN_FILN={IRC:'IRECÊ',JAC:'JACOBINA',FSA:'FEIRA DE SANTANA'};
+let TN={eq:[],dias:{},diaSel:null,fil:'ALL',cs:'ALL'};
+const tnBase=e=>{ const x=(e||'').split('-'); return x.length>1?x[x.length-1].trim().toUpperCase():'OUT'; };
+const tnN=x=>(x||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
 function tnParseCSV(t){
-  t=t.replace(/^\uFEFF/,''); const first=t.split(/\r?\n/)[0]||''; const d=(first.split(';').length>=first.split(',').length)?';':',';
+  t=t.replace(/^\uFEFF/,''); const f=t.split(/\r?\n/)[0]||''; const d=(f.split(';').length>=f.split(',').length)?';':',';
   const rows=[]; let r=[],c='',q=false;
   for(let i=0;i<t.length;i++){ const ch=t[i];
     if(q){ if(ch==='"'){ if(t[i+1]==='"'){c+='"';i++;} else q=false; } else c+=ch; }
@@ -1519,105 +1524,146 @@ function tnParseCSV(t){
   if(c!==''||r.length){ r.push(c); rows.push(r); }
   return rows.filter(x=>x.some(v=>v.trim()!==''));
 }
-const tnN=x=>(x||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
 function tnDt(x){ const m=(x||'').match(/(\d{2})\/(\d{2})\/(\d{4})(?:\s+(\d{2}):(\d{2})(?::(\d{2}))?)?/); return m?new Date(+m[3],m[2]-1,+m[1],+(m[4]||0),+(m[5]||0),+(m[6]||0)):null; }
-function tnHora(x){ const d=tnDt(x); return d?d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'—'; }
+const tnHora=x=>{ const d=tnDt(x); return d?d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):'—'; };
+const tnKey=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const tnFmtDia=k=>k.split('-').reverse().join('/');
+function tnAtual(){ const ks=Object.keys(TN.dias).sort(); const k=(TN.diaSel&&TN.dias[TN.diaSel])?TN.diaSel:ks[ks.length-1]; return k?{k,dia:TN.dias[k]}:null; }
 function turnoUpload(inp){
   const f=inp.files[0]; inp.value=''; if(!f) return;
   const rd=new FileReader();
   rd.onload=()=>{
-    let txt=new TextDecoder('utf-8').decode(rd.result);
-    if(txt.includes('\uFFFD')) txt=new TextDecoder('latin1').decode(rd.result);
+    let txt=new TextDecoder('utf-8').decode(rd.result); if(txt.includes('\uFFFD')) txt=new TextDecoder('latin1').decode(rd.result);
     const rows=tnParseCSV(txt); if(rows.length<2){ showToast('❌ CSV vazio'); return; }
     const h=rows[0].map(tnN), col=n=>h.indexOf(tnN(n));
-    const ix={eq:col('Equipe'),resp:col('Responsável'),coord:col('Coordenador'),sup:col('Supervisor'),vei:col('Veículo'),ini:col('Data início'),fim:col('Data fim'),sit:col('Situação'),cod:col('Cód. do Turno')};
+    const ix={eq:col('Equipe'),resp:col('Responsável'),vei:col('Veículo'),ini:col('Data início'),fim:col('Data fim'),sit:col('Situação'),ct:col('Contrato'),pr:col('Processo')};
     if(ix.eq<0||ix.sit<0){ showToast('❌ Não achei as colunas Equipe/Situação'); return; }
     const g=(r,k)=>(ix[k]>=0?(r[ix[k]]||''):'').trim();
-    const itens=rows.slice(1).map(r=>({cod:g(r,'cod'),equipe:g(r,'eq'),resp:g(r,'resp'),coord:g(r,'coord'),sup:g(r,'sup'),veiculo:g(r,'vei'),ini:g(r,'ini'),fim:g(r,'fim'),sit:g(r,'sit')})).filter(x=>x.equipe);
-    TN.rel={arquivo:f.name,importadoEm:new Date().toISOString(),por:localStorage.getItem('mariua_login')||'',itens};
-    const ja=new Set(TN.eq.map(e=>e.equipe)); itens.forEach(x=>{ if(!ja.has(x.equipe)){ TN.eq.push({equipe:x.equipe,resp:x.resp}); ja.add(x.equipe);} });
-    turnoSalvar(); turnoRender(); showToast('✅ Relatório de turnos atualizado!');
+    const itens=rows.slice(1).map(r=>({equipe:g(r,'eq'),resp:g(r,'resp'),veiculo:g(r,'vei'),ini:g(r,'ini'),fim:g(r,'fim'),sit:g(r,'sit')})).filter(x=>x.equipe);
+    const cont={}; itens.forEach(x=>{ const d=tnDt(x.ini); if(d){ const k=tnKey(d); cont[k]=(cont[k]||0)+1; } });
+    const k=Object.keys(cont).sort((a,b)=>cont[b]-cont[a])[0]||tnKey(new Date());
+    const ant=TN.dias[k];
+    TN.dias[k]={data:k,arquivo:f.name,importadoEm:new Date().toISOString(),contrato:g(rows[1],'ct'),processo:g(rows[1],'pr'),itens,just:ant?ant.just||[]:[]};
+    const ja=new Set(TN.eq.map(e=>e.equipe)); itens.forEach(x=>{ if(!ja.has(x.equipe)){ TN.eq.push({equipe:x.equipe}); ja.add(x.equipe);} });
+    TN.diaSel=null; turnoSalvarEq(); turnoSalvarDia(k); turnoRender(); showToast('✅ Relatório de '+tnFmtDia(k)+' carregado!');
   };
   rd.readAsArrayBuffer(f);
 }
-function turnoSalvar(){
-  try{ localStorage.setItem('mariua_turno',JSON.stringify(TN)); }catch(e){}
-  if(window._fbReady){ try{ firebase.firestore().collection('turnos').doc('atual').set({rel:TN.rel,eq:TN.eq}); }catch(e){ console.warn(e); } }
-}
+function turnoLocal(){ try{ const ks=Object.keys(TN.dias).sort().slice(-60), d={}; ks.forEach(k=>d[k]=TN.dias[k]); localStorage.setItem('mariua_turno2',JSON.stringify({eq:TN.eq,dias:d})); }catch(e){} }
+function turnoSalvarEq(){ turnoLocal(); if(window._fbReady){ try{ firebase.firestore().collection('turnos').doc('equipes').set({eq:TN.eq}); }catch(e){} } }
+function turnoSalvarDia(k){ turnoLocal(); if(window._fbReady){ try{ firebase.firestore().collection('turnos').doc('dia_'+k).set(TN.dias[k]); }catch(e){ console.warn(e); } } }
 async function turnoInit(){
-  if(!TN.rel){ try{ const l=JSON.parse(localStorage.getItem('mariua_turno')||'null'); if(l) TN=l; }catch(e){} }
+  if(!TN._loc){ TN._loc=1; try{ const l=JSON.parse(localStorage.getItem('mariua_turno2')||'null'); if(l){ TN.eq=l.eq||[]; TN.dias=l.dias||{}; } }catch(e){} if(!TN.eq.length) TN.eq=TN_ROSTER.map(e=>({equipe:e})); }
   turnoRender();
-  if(window._fbReady && !TN._fb){
-    try{ const d=await firebase.firestore().collection('turnos').doc('atual').get(); if(d.exists){ TN={rel:d.data().rel||null,eq:d.data().eq||[],_fb:1}; } else TN._fb=1; turnoRender(); }catch(e){ console.warn(e); }
-  }
+  if(window._fbReady && !TN._fb){ TN._fb=1;
+    try{ const sn=await firebase.firestore().collection('turnos').get();
+      sn.forEach(d=>{ if(d.id==='equipes'){ if((d.data().eq||[]).length) TN.eq=d.data().eq; } else if(d.id.startsWith('dia_')) TN.dias[d.id.slice(4)]=d.data(); });
+      turnoLocal(); turnoRender(); }catch(e){ console.warn(e); } }
 }
-function turnoModelo(){
-  const por={}; (TN.rel?TN.rel.itens:[]).forEach(x=>{ (por[x.equipe]=por[x.equipe]||[]).push(x); });
-  const res={};
-  const add=(eq,st,x)=>{ const b=tnBase(eq); (res[b]=res[b]||{aberto:[],fechado:[],nao:[]})[st].push({eq,x}); };
-  Object.keys(por).forEach(eq=>{
-    const l=por[eq].slice().sort((a,b)=>(tnDt(b.ini)||0)-(tnDt(a.ini)||0));
-    const aberto=l.find(x=>!x.fim && !/fech|encerr/i.test(x.sit));
-    add(eq, aberto?'aberto':'fechado', aberto||l[0]);
-  });
-  TN.eq.forEach(e=>{ if(!por[e.equipe]) add(e.equipe,'nao',{resp:e.resp||'',ini:'',fim:'',veiculo:''}); });
-  const ordem=Object.keys(TN_BASES), bases=Object.keys(res).sort((a,b)=>{ const i=ordem.indexOf(a),j=ordem.indexOf(b); return (i<0?99:i)-(j<0?99:j)||a.localeCompare(b); });
-  Object.values(res).forEach(b=>['aberto','fechado','nao'].forEach(k=>b[k].sort((p,q)=>(p.x.resp||p.eq).localeCompare(q.x.resp||q.eq))));
-  return {res,bases};
+function tnPass(b){ if(TN.cs!=='ALL'&&b!==TN.cs) return false; if(TN.fil!=='ALL'&&(TN_FIL[b]||'OUT')!==TN.fil) return false; return true; }
+function turnoModelo(k,filtrar){
+  const dia=TN.dias[k], por={}; dia.itens.forEach(x=>{ (por[x.equipe]=por[x.equipe]||[]).push(x); });
+  const nomes=new Set(TN.eq.map(e=>e.equipe)); Object.keys(por).forEach(n=>nomes.add(n));
+  const just=new Set(dia.just||[]), o={abriu:[],just:[],nao:[]};
+  [...nomes].sort((a,b)=>a.localeCompare(b)).forEach(n=>{
+    if(filtrar&&!tnPass(tnBase(n))) return; const l=por[n];
+    if(l){ const ab=l.find(x=>!x.fim&&!/fech|encerr/i.test(x.sit)); o.abriu.push({eq:n,aberto:!!ab,x:ab||l[0]}); }
+    else (just.has(n)?o.just:o.nao).push({eq:n});
+  }); return o;
 }
+function turnoFiltro(t,v){ if(t==='fil'){ TN.fil=v; TN.cs='ALL'; } else TN.cs=v; turnoRender(); }
+function turnoHoje(){ TN.diaSel=null; turnoRender(); }
+function turnoJust(eq){ const a=tnAtual(); if(!a) return; const d=a.dia; d.just=d.just||[]; const i=d.just.indexOf(eq); if(i<0) d.just.push(eq); else d.just.splice(i,1); turnoSalvarDia(a.k); turnoRender(); }
 function turnoRender(){
-  const grid=document.getElementById('tn-grid'); if(!grid) return;
-  const {res,bases}=turnoModelo();
-  document.getElementById('tn-info').textContent=TN.rel?('Relatório: '+(TN.rel.arquivo||'')+' · atualizado em '+admFmt(TN.rel.importadoEm)):'Nenhum relatório carregado. Suba o CSV de consulta de turno.';
-  const tot={aberto:0,fechado:0,nao:0}; bases.forEach(b=>['aberto','fechado','nao'].forEach(k=>tot[k]+=res[b][k].length));
-  document.getElementById('tn-kpis').innerHTML=[['aberto','Turno aberto (não fechou)'],['fechado','Abriu e fechou'],['nao','Não abriu']].map(([k,t])=>`<div class="tn-kpi" style="--c:${TN_COR[k]}"><b>${tot[k]}</b><span>${t}</span></div>`).join('');
-  if(!bases.length){ grid.innerHTML='<div class="tn-empty" style="grid-column:1/-1">Clique em <b>Subir relatório CSV</b> para carregar os turnos.</div>'; }
-  else grid.innerHTML=bases.map(b=>{
-    const d=res[b], sec=(k,tit,fn)=>d[k].length?`<div class="tn-sec" style="--c:${TN_COR[k]}">${tit} (${d[k].length})</div>`+d[k].map(o=>`<div class="tn-item" style="--c:${TN_COR[k]}"><div class="tn-dot"></div><div><div class="nm">${admEsc(o.x.resp||tnNomeEq(o.eq))}</div><div class="eq">${admEsc(o.eq)}${o.x.veiculo?' · '+admEsc(o.x.veiculo):''}</div></div><div class="hr">${fn(o.x)}</div></div>`).join(''):'';
-    return `<div class="tn-col"><div class="tn-colhead"><div><h3>${admEsc(b)}</h3><small>${admEsc(TN_BASES[b]||'Base')}</small></div><div class="tn-pills">`+['aberto','fechado','nao'].map(k=>`<span class="tn-pill" style="--c:${TN_COR[k]}">${d[k].length}</span>`).join('')+`</div></div>`
-      +sec('aberto','🟡 Ainda com turno aberto',x=>'abriu '+tnHora(x.ini))
-      +sec('fechado','🟢 Abriu e fechou',x=>tnHora(x.ini)+' → '+tnHora(x.fim))
-      +sec('nao','🔴 Não abriu turno',()=>'—')+`</div>`;
+  const body=document.getElementById('tn2-body'); if(!body) return;
+  const chip=(t,v,txt)=>`<button class="tn2-chip ${TN[t]===v?'on':''}" onclick="turnoFiltro('${t}','${v}')">${txt}</button>`;
+  document.getElementById('tn2-fil').innerHTML=chip('fil','ALL','Todos')+Object.keys(TN_FILN).map(f=>chip('fil',f,TN_FILN[f])).join('');
+  const css=Object.keys(TN_CS).filter(b=>TN.fil==='ALL'||TN_FIL[b]===TN.fil);
+  document.getElementById('tn2-cs').innerHTML=chip('cs','ALL','Todos')+css.map(b=>chip('cs',b,'SERVIÇOS EM ENERGIA - '+TN_CS[b].toUpperCase())).join('');
+  const a=tnAtual();
+  document.getElementById('tn-file')&&0;
+  if(!a){ body.innerHTML='<div class="tn2-vazio">Nenhum relatório carregado. Clique em <b>Subir relatório CSV</b>.</div>'; document.getElementById('tn2-foot').textContent=''; document.getElementById('tn2-info').textContent=''; renderChips(); return; }
+  const m=turnoModelo(a.k,true), tot=m.abriu.length+m.just.length+m.nao.length, fech=m.abriu.filter(x=>!x.aberto).length;
+  document.getElementById('tn2-info').textContent='Dia: '+tnFmtDia(a.k)+(a.k===tnKey(new Date())?' (hoje)':'');
+  const card=(cls,bd,ic,tit,sub,n,inner)=>`<div class="tn2-card" style="--bd:${bd};--ic:${ic}"><div class="tn2-h" style="background:${cls}"><div class="ic">${tit[0]}</div><div>${tit[1]}${sub?`<div class="sub">${sub}</div>`:''}</div><div class="n">${n}</div></div>${inner}</div>`;
+  const grid=l=>l.length?`<div class="tn2-grid">${l.join('')}</div>`:'<div class="tn2-vazio">Nenhuma equipe</div>';
+  const it=(eq,tx,bgc,badge,tip,click)=>`<div class="tn2-it" style="--tx:${tx}" title="${admEsc(tip||'')}"><span>${admEsc(eq)}</span>${click?`<button class="tn2-bd" style="--bg:${bgc}" onclick="turnoJust('${admEsc(eq).replace(/'/g,'')}')" title="Clique para justificar/desfazer">${badge}</button>`:`<span class="tn2-bd" style="--bg:${bgc}">${badge}</span>`}</div>`;
+  body.innerHTML=
+   card('#f0f9f9','#bfe6e4','#17a58a',['✓','ABRIU TURNO'],tot?`${fech} fechado(s) · ${m.abriu.length-fech} ainda aberto(s)`:'',m.abriu.length,
+     grid(m.abriu.map(o=>it(o.eq,'#0b4f55',o.aberto?'#e8a317':'#17a58a',o.aberto?'ABERTO':'OK','Abriu '+tnHora(o.x.ini)+' · Fechou '+tnHora(o.x.fim)+(o.x.veiculo?' · '+o.x.veiculo:''))))) +
+   card('#fffbf0','#f3e3b3','#e8a317',['!','FALTA JUSTIFICADA'],'',m.just.length,
+     grid(m.just.map(o=>it(o.eq,'#7a5a05','#e8a317','JUSTIF.','Clique para desfazer',1)))) +
+   card('#fff3f3','#f3c9c9','#d9534f',['●','NÃO ABRIU TURNO'],'Clique em FALTA para marcar como justificada',m.nao.length,
+     grid(m.nao.map(o=>it(o.eq,'#7a1f1f','#e04848','FALTA','Clique para justificar',1))));
+  const d=a.dia; document.getElementById('tn2-foot').textContent=[d.contrato||'OBRAS - BA',d.processo||'BA_PROCESSO',tot+' equipes ativas',tnFmtDia(a.k)].join(' | ');
+  renderChips();
+}
+function renderChips(){
+  const el=document.getElementById('tn2-chips'); if(!el) return;
+  el.innerHTML=TN.eq.slice().sort((a,b)=>a.equipe.localeCompare(b.equipe)).map(e=>`<span class="ch">${admEsc(e.equipe)}<button title="Remover" onclick="turnoDelEquipe('${admEsc(e.equipe).replace(/'/g,'')}')">✕</button></span>`).join('');
+}
+function turnoAddLista(){
+  const t=document.getElementById('tn2-lista'); const arr=t.value.split(/[\n,;]+/).map(x=>x.trim().toUpperCase()).filter(x=>/^.+-[A-Z]{2,4}$/.test(x));
+  if(!arr.length){ showToast('Use o formato NOME-BASE (ex.: JOAO-JAC)'); return; }
+  const ja=new Set(TN.eq.map(e=>e.equipe)); arr.forEach(x=>{ if(!ja.has(x)){ TN.eq.push({equipe:x}); ja.add(x);} });
+  t.value=''; turnoSalvarEq(); turnoRender(); showToast('✅ '+arr.length+' equipe(s) processada(s)');
+}
+function turnoDelEquipe(eq){ TN.eq=TN.eq.filter(e=>e.equipe!==eq); turnoSalvarEq(); turnoRender(); }
+function tnModal(h){ const m=document.createElement('div'); m.className='tn2-modal'; m.onclick=e=>{ if(e.target===m) m.remove(); }; m.innerHTML='<div class="tn2-mc">'+h+'</div>'; document.body.appendChild(m); }
+function turnoDias(){
+  const ks=Object.keys(TN.dias).sort().reverse();
+  tnModal('<h3>📅 Dias salvos</h3>'+(ks.length?ks.map(k=>{ const m=turnoModelo(k,false); return `<div class="tn2-dia" onclick="TN.diaSel='${k}';this.closest('.tn2-modal').remove();turnoRender()"><span>${tnFmtDia(k)}</span><span style="color:#6b7c86">${m.abriu.length} abriram · ${m.nao.length} faltas</span></div>`; }).join(''):'<div class="tn2-vazio">Nenhum dia salvo ainda.</div>'));
+}
+function turnoMedias(){
+  const ks=Object.keys(TN.dias); if(!ks.length){ showToast('Suba um relatório primeiro'); return; }
+  const linhas=Object.keys(TN_CS).map(b=>{
+    const nomes=TN.eq.map(e=>e.equipe).filter(n=>tnBase(n)===b); if(!nomes.length) return '';
+    let soma=0; ks.forEach(k=>{ const ab=new Set(TN.dias[k].itens.map(x=>x.equipe)); soma+=nomes.filter(n=>ab.has(n)).length/nomes.length; });
+    const pct=Math.round(soma/ks.length*100);
+    return `<div class="tn2-med">${TN_CS[b].toUpperCase()} (${b}) — ${pct}% abriram turno<div class="tr"><i style="width:${pct}%"></i></div></div>`;
   }).join('');
-  document.getElementById('tn-chips').innerHTML=TN.eq.slice().sort((a,b)=>a.equipe.localeCompare(b.equipe)).map(e=>`<span class="tn-chip">${admEsc(e.equipe)}<button title="Remover" onclick="turnoDelEquipe('${admEsc(e.equipe).replace(/'/g,'')}')">✕</button></span>`).join('')||'<span style="font-size:11px;color:#7fae98">Nenhuma equipe ainda.</span>';
+  tnModal('<h3>📊 Média de abertura por base</h3><div style="font-size:12px;color:#6b7c86">Calculada sobre '+ks.length+' dia(s) salvo(s) e as equipes cadastradas.</div>'+linhas);
 }
-function turnoAddEquipe(){
-  const i=document.getElementById('tn-new'), v=i.value.trim().toUpperCase();
-  if(!/^.+-[A-Z]{2,4}$/.test(v)){ showToast('Use o formato NOME-BASE (ex.: JOAO-JAC)'); return; }
-  if(!TN.eq.some(e=>e.equipe===v)) TN.eq.push({equipe:v,resp:''});
-  i.value=''; turnoSalvar(); turnoRender();
+function turnoRelFaltas(){
+  const a=tnAtual(); if(!a){ showToast('Suba um relatório primeiro'); return; }
+  const m=turnoModelo(a.k,true); const gr=(l)=>{ const o={}; l.forEach(x=>{ const f=TN_FILN[TN_FIL[tnBase(x.eq)]]||'OUTROS'; (o[f]=o[f]||[]).push(x.eq); }); return Object.keys(o).map(f=>`*${f}* (${o[f].length})\n${o[f].join(', ')}`).join('\n\n'); };
+  let t=`🔴 *NÃO ABRIRAM TURNO* — ${tnFmtDia(a.k)} (${m.nao.length})\n\n`+(m.nao.length?gr(m.nao):'Nenhuma equipe.');
+  if(m.just.length) t+=`\n\n🟡 *FALTA JUSTIFICADA* (${m.just.length})\n`+m.just.map(x=>x.eq).join(', ');
+  (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>showToast('✅ Relatório de faltas copiado!')).catch(()=>prompt('Copie o relatório:',t));
 }
-function turnoDelEquipe(eq){ TN.eq=TN.eq.filter(e=>e.equipe!==eq); turnoSalvar(); turnoRender(); }
-function turnoImagem(){
-  if(!TN.rel){ showToast('Suba um relatório primeiro'); return; }
-  const {res,bases}=turnoModelo(); const W=1600, colW=(W-60-(bases.length-1)*20)/bases.length, rowH=34, secH=30;
-  const hCol=b=>90+['aberto','fechado','nao'].reduce((a,k)=>a+(res[b][k].length?secH+res[b][k].length*rowH:0),0)+10;
-  const H=150+Math.max(...bases.map(hCol))+40;
+async function turnoImagem(){
+  const a=tnAtual(); if(!a){ showToast('Suba um relatório primeiro'); return; }
+  try{ await document.fonts.load('800 40px Barlow'); await document.fonts.load('700 18px Barlow'); }catch(e){}
+  const m=turnoModelo(a.k,true), F="Barlow,Arial,sans-serif", W=1240, P=28, CW=W-2*P, IN=22, GAP=10, COLS=4, IW=(CW-2*IN-(COLS-1)*GAP)/COLS, IH=44;
+  const secs=[['abriu','ABRIU TURNO','#f0f9f9','#bfe6e4','#17a58a','#0b4f55','#eaf6f6',o=>o.aberto?['ABERTO','#e8a317']:['OK','#17a58a']],['just','FALTA JUSTIFICADA','#fffbf0','#f3e3b3','#e8a317','#7a5a05','#fdf6e3',()=>['JUSTIF.','#e8a317']],['nao','NÃO ABRIU TURNO','#fff3f3','#f3c9c9','#d9534f','#7a1f1f','#fdeeee',()=>['FALTA','#e04848']]].filter(s=>m[s[0]].length||s[0]==='abriu'||s[0]==='nao');
+  const hSec=l=>82+30+Math.max(1,Math.ceil(l.length/COLS))*(IH+GAP)+10;
+  const H=215+secs.reduce((t,s)=>t+hSec(m[s[0]])+28,0)+90;
   const c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
-  x.fillStyle='#06100b'; x.fillRect(0,0,W,H);
-  x.fillStyle='#3ddc97'; x.font='bold 34px "Courier New",monospace'; x.fillText('CONTROLE DE TURNOS',30,52);
-  x.fillStyle='#7fae98'; x.font='16px Arial'; x.fillText('Relatório: '+(TN.rel.arquivo||'')+'  ·  gerado em '+admFmt(new Date().toISOString()),30,80);
-  const tot={aberto:0,fechado:0,nao:0}; bases.forEach(b=>['aberto','fechado','nao'].forEach(k=>tot[k]+=res[b][k].length));
-  [['aberto','TURNO ABERTO'],['fechado','ABRIU E FECHOU'],['nao','NÃO ABRIU']].forEach(([k,t],i)=>{ const bx=30+i*260; x.fillStyle='#0b1d15'; x.fillRect(bx,100,240,56); x.fillStyle=TN_COR[k]; x.fillRect(bx,100,6,56);
-    x.font='bold 32px "Courier New",monospace'; x.fillText(String(tot[k]),bx+20,141); x.font='13px Arial'; x.fillStyle='#9fd0b8'; x.fillText(t,bx+80,134); });
-  const fit=(t,w)=>{ while(x.measureText(t).width>w&&t.length>3) t=t.slice(0,-2); return t; };
-  bases.forEach((b,i)=>{
-    const bx=30+i*(colW+20), by=180, d=res[b];
-    x.fillStyle='#0b1d15'; x.fillRect(bx,by,colW,hCol(b)); x.fillStyle='#0f2a1e'; x.fillRect(bx,by,colW,60); x.fillStyle='#1D9E75'; x.fillRect(bx,by+58,colW,3);
-    x.fillStyle='#fff'; x.font='bold 26px "Courier New",monospace'; x.fillText(b,bx+16,by+30); x.fillStyle='#7fae98'; x.font='13px Arial'; x.fillText(TN_BASES[b]||'Base',bx+16,by+50);
-    ['nao','fechado','aberto'].forEach((k,j)=>{ x.fillStyle=TN_COR[k]; x.font='bold 15px "Courier New",monospace'; x.textAlign='right'; x.fillText(String(d[k].length),bx+colW-16-j*44,by+36); x.textAlign='left'; });
-    let y=by+70;
-    [['aberto','AINDA COM TURNO ABERTO',x2=>'abriu '+tnHora(x2.ini)],['fechado','ABRIU E FECHOU',x2=>tnHora(x2.ini)+' → '+tnHora(x2.fim)],['nao','NÃO ABRIU TURNO',()=>'—']].forEach(([k,tit,fn])=>{
-      if(!d[k].length) return;
-      x.fillStyle=TN_COR[k]; x.font='bold 13px Arial'; x.fillText(tit+' ('+d[k].length+')',bx+16,y+20); y+=secH;
-      d[k].forEach(o=>{ x.fillStyle=TN_COR[k]; x.beginPath(); x.arc(bx+22,y+rowH/2,5,0,7); x.fill();
-        x.fillStyle='#fff'; x.font='bold 14px Arial'; x.fillText(fit(o.x.resp||tnNomeEq(o.eq),colW-170),bx+38,y+15);
-        x.fillStyle='#7fae98'; x.font='11px Arial'; x.fillText(o.eq,bx+38,y+29);
-        x.fillStyle='#cfeee0'; x.font='13px "Courier New",monospace'; x.textAlign='right'; x.fillText(fn(o.x),bx+colW-14,y+21); x.textAlign='left'; y+=rowH; });
-    });
+  const rr=(X,Y,w,h,r)=>{ x.beginPath(); x.moveTo(X+r,Y); x.arcTo(X+w,Y,X+w,Y+h,r); x.arcTo(X+w,Y+h,X,Y+h,r); x.arcTo(X,Y+h,X,Y,r); x.arcTo(X,Y,X+w,Y,r); x.closePath(); };
+  x.fillStyle='#eef3f5'; x.fillRect(0,0,W,H);
+  const g=x.createLinearGradient(0,0,W,150); g.addColorStop(0,'#0b6f73'); g.addColorStop(1,'#17a58a'); x.fillStyle=g; x.fillRect(0,0,W,150);
+  const o=x.createLinearGradient(0,0,W,0); o.addColorStop(0,'#ff7a2f'); o.addColorStop(1,'#ffb347'); x.fillStyle=o; x.fillRect(0,150,W,6);
+  x.textAlign='center'; x.fillStyle='#fff'; x.font='800 52px '+F; const hoje=a.k===tnKey(new Date());
+  x.fillText('TURNO'+(hoje?' HOJE':'')+' ('+tnFmtDia(a.k)+')',W/2,78);
+  const ie=new Date(a.dia.importadoEm||Date.now()); const filt=TN.fil!=='ALL'?' · '+TN_FILN[TN.fil]+(TN.cs!=='ALL'?' / '+TN_CS[TN.cs].toUpperCase():''):'';
+  x.font='700 19px '+F; x.fillStyle='rgba(255,255,255,.85)'; if('letterSpacing' in x) x.letterSpacing='4px';
+  x.fillText('RELATÓRIO: '+ie.toLocaleDateString('pt-BR')+' · '+ie.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+' · BA'+filt,W/2,118); if('letterSpacing' in x) x.letterSpacing='0px';
+  x.textAlign='left'; let y=190;
+  secs.forEach(([k,tit,bg,bd,cor,tx,ibg,bf])=>{
+    const l=m[k], h=hSec(l);
+    x.fillStyle='#fff'; rr(P,y,CW,h,16); x.fill(); x.save(); rr(P,y,CW,h,16); x.clip(); x.fillStyle=bg; x.fillRect(P,y,CW,82); x.fillStyle=bd; x.fillRect(P,y+81,CW,2); x.restore();
+    x.fillStyle=cor; rr(P+22,y+26,30,30,8); x.fill(); x.fillStyle='#fff'; x.font='800 20px '+F; x.textAlign='center'; x.fillText(k==='abriu'?'✓':k==='just'?'!':'●',P+37,y+48);
+    x.textAlign='left'; x.fillStyle='#1a2a33'; x.font='800 28px '+F; x.fillText(tit,P+66,y+51);
+    x.textAlign='right'; x.fillStyle=cor; x.font='800 38px '+F; x.fillText(String(l.length),P+CW-24,y+55); x.textAlign='left';
+    l.forEach((it,i)=>{ const ix=P+IN+(i%COLS)*(IW+GAP), iy=y+82+22+Math.floor(i/COLS)*(IH+GAP);
+      x.fillStyle=ibg; rr(ix,iy,IW,IH,8); x.fill(); x.fillStyle=cor; x.fillRect(ix,iy+3,4,IH-6);
+      const [bt,bc]=bf(it); x.font='800 13px '+F; const bw=x.measureText(bt).width+22;
+      x.fillStyle=bc; rr(ix+IW-bw-10,iy+(IH-26)/2,bw,26,6); x.fill(); x.fillStyle='#fff'; x.textAlign='center'; x.fillText(bt,ix+IW-bw/2-10,iy+IH/2+5); x.textAlign='left';
+      x.fillStyle=tx; x.font='700 17px '+F; let nm=it.eq; while(x.measureText(nm).width>IW-bw-40&&nm.length>3) nm=nm.slice(0,-2); if(nm!==it.eq) nm+='…'; x.fillText(nm,ix+18,iy+IH/2+6); });
+    y+=h+28;
   });
-  const a=document.createElement('a'); a.download='turnos_'+new Date().toISOString().slice(0,10)+'.png'; a.href=c.toDataURL('image/png'); a.click();
-  showToast('✅ Imagem gerada!');
+  x.textAlign='center'; x.fillStyle='#9aa8b0'; x.font='700 17px '+F; if('letterSpacing' in x) x.letterSpacing='1px'; x.fillText('Mariuá Construção e Energia · OBRAS BA',W/2,H-34);
+  const l=document.createElement('a'); l.download='turno_'+a.k.split('-').reverse().join('_')+'.png'; l.href=c.toDataURL('image/png'); l.click(); showToast('✅ Imagem gerada!');
 }
 
 function goTo(p){
