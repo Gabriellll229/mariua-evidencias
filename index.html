@@ -1535,7 +1535,8 @@ function tnAtual(){ const ks=Object.keys(TN.dias).sort(); const k=(TN.diaSel&&TN
 function turnoUpload(inp){
   const f=inp.files[0]; inp.value=''; if(!f) return;
   const rd=new FileReader();
-  rd.onload=()=>{
+  rd.onload=async()=>{
+    if(TN._fbP){ try{ await TN._fbP; }catch(e){} }
     let txt=new TextDecoder('utf-8').decode(rd.result); if(txt.includes('\uFFFD')) txt=new TextDecoder('latin1').decode(rd.result);
     const rows=tnParseCSV(txt); if(rows.length<2){ showToast('❌ CSV vazio'); return; }
     const h=rows[0].map(tnN), col=n=>h.indexOf(tnN(n));
@@ -1547,6 +1548,7 @@ function turnoUpload(inp){
     const k=Object.keys(cont).sort((a,b)=>cont[b]-cont[a])[0]||tnKey(new Date());
     const ant=TN.dias[k];
     TN.dias[k]={data:k,arquivo:f.name,importadoEm:new Date().toISOString(),contrato:g(rows[1],'ct'),processo:g(rows[1],'pr'),itens,ausentes:turnoAusentes(itens),ativas:TN.eq.length,just:ant?ant.just||[]:[],motivos:ant?ant.motivos||{}:{},ocultas:ant?ant.ocultas||[]:[]};
+    TN._up=TN._up||{}; TN._up[k]=1; TN.dias[k].resumo={ativas:TN.eq.length,abriram:new Set(itens.map(x=>x.equipe)).size,naoAbriram:TN.dias[k].ausentes.length};
     TN.diaSel=null; TN._avisoSalvo=1; turnoSalvarDia(k); turnoRender(); const mm=turnoModelo(k,false); showToast('✅ '+tnFmtDia(k)+': '+mm.abriu.length+' abriram · '+(mm.nao.length+mm.just.length)+' não abriram');
   };
   rd.readAsArrayBuffer(f);
@@ -1560,10 +1562,12 @@ async function turnoInit(){
   if(!TN._loc){ TN._loc=1; try{ const l=JSON.parse(localStorage.getItem('mariua_turno2')||'null'); if(l){ TN.eq=l.eq||[]; TN.dias=l.dias||{}; } }catch(e){} if(!TN.eq.some(e=>e.enc)) TN.eq=TN_ROSTER.map(e=>({...e})); }
   turnoRender();
   if(window._fbReady && !TN._fb){ TN._fb=1;
-    try{ const sn=await firebase.firestore().collection('turnos').get();
-      let okEq=false; sn.forEach(d=>{ if(d.id==='equipes'){ const q=d.data().eq||[]; if(q.some(e=>e.enc)){ TN.eq=q; okEq=true; } } else if(d.id.startsWith('dia_')) TN.dias[d.id.slice(4)]=d.data(); });
+    TN._fbP=(async()=>{ try{ const sn=await firebase.firestore().collection('turnos').get();
+      let okEq=false; sn.forEach(d=>{ if(d.id==='equipes'){ const q=d.data().eq||[]; if(q.some(e=>e.enc)){ TN.eq=q; okEq=true; } } else if(d.id.startsWith('dia_')){ const k=d.id.slice(4); if(!(TN._up&&TN._up[k])) TN.dias[k]=d.data(); } });
       if(!okEq){ TN.eq=TN_ROSTER.map(e=>({...e})); turnoSalvarEq(); }
-      turnoLocal(); turnoRender(); }catch(e){ console.warn(e); } }
+      TN._bancoOk=true; turnoLocal(); turnoRender(); }catch(e){ console.warn(e); TN._bancoOk=false; turnoRender(); } })();
+    await TN._fbP;
+  }
 }
 function tnPass(b){ if(TN.cs!=='ALL'&&b!==TN.cs) return false; if(TN.fil!=='ALL'&&(TN_FIL[b]||'OUT')!==TN.fil) return false; return true; }
 function turnoAusentes(itens){
@@ -1610,9 +1614,9 @@ function turnoRender(){
   document.getElementById('tn2-cs').innerHTML=chip('cs','ALL','Todos')+css.map(b=>chip('cs',b,'SERVIÇOS EM ENERGIA - '+TN_CS[b].toUpperCase())).join('');
   const a=tnAtual();
   document.getElementById('tn-file')&&0;
-  if(!a){ body.innerHTML='<div class="tn2-vazio">Nenhum relatório carregado. Clique em <b>Subir relatório CSV</b>.</div>'; document.getElementById('tn2-foot').textContent=''; document.getElementById('tn2-info').textContent=''; renderChips(); return; }
+  if(!a){ body.innerHTML='<div class="tn2-vazio">Nenhum relatório carregado. Clique em <b>Subir relatório CSV</b>.</div>'; document.getElementById('tn2-foot').textContent=''; document.getElementById('tn2-info').textContent=TN.eq.length+' equipes no cadastro · '+(window._fbReady?'☁️ banco ok':'⚠️ sem banco'); renderChips(); return; }
   const m=turnoModelo(a.k,true), tot=m.abriu.length+m.just.length+m.nao.length, fech=m.abriu.filter(x=>!x.aberto).length;
-  document.getElementById('tn2-info').textContent='Dia: '+tnFmtDia(a.k)+(a.k===tnKey(new Date())?' (hoje)':'');
+  document.getElementById('tn2-info').textContent='Dia: '+tnFmtDia(a.k)+(a.k===tnKey(new Date())?' (hoje)':'')+' · '+TN.eq.length+' equipes no cadastro · '+(window._fbReady?(TN._bancoOk===false?'⚠️ banco com erro':'☁️ banco ok'):'⚠️ sem banco');
   const card=(cls,bd,ic,tit,sub,n,inner)=>`<div class="tn2-card" style="--bd:${bd};--ic:${ic}"><div class="tn2-h" style="background:${cls}"><div class="ic">${tit[0]}</div><div>${tit[1]}${sub?`<div class="sub">${sub}</div>`:''}</div><div class="n">${n}</div></div>${inner}</div>`;
   const grid=l=>l.length?`<div class="tn2-grid">${l.join('')}</div>`:'<div class="tn2-vazio">Nenhuma equipe</div>';
   const oc=new Set(a.dia.ocultas||[]);
