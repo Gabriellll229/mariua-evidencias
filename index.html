@@ -1343,10 +1343,10 @@ function saveEditProfile(){
       <label>Data do comunicado</label><input type="date" id="cm-data" oninput="comLer()">
       <label class="cm-chk"><input type="checkbox" id="cm-mostrar" onchange="comLer()"> Mostrar a data no topo da imagem</label>
       <label>Saudação</label><input type="text" id="cm-saud" oninput="comLer()">
-      <label>Texto inicial &nbsp;<span style="text-transform:none;letter-spacing:0;font-weight:600">({data} = data do comunicado · **negrito**)</span></label><textarea id="cm-intro" rows="3" oninput="comLer()"></textarea>
-      <label>Itens da lista (rótulo em negrito + texto)</label><div id="cm-itens"></div>
+      <label>Texto do comunicado</label><div style="font-size:11px;color:#6b7c86;margin-bottom:4px">Cada linha vira um parágrafo. Use {data} para inserir a data e **texto** para negrito.</div><textarea id="cm-intro" rows="6" placeholder="Escreva aqui o texto do comunicado..." oninput="comLer()"></textarea>
+      <label>Lista com marcadores (opcional)</label><div style="font-size:11px;color:#6b7c86;margin-bottom:4px">Use só se precisar de tópicos. Rótulo em negrito + texto.</div><div id="cm-itens"></div>
       <button class="tn2-b g" onclick="comAddItem()">+ Adicionar item</button>
-      <label>Texto final</label><textarea id="cm-final" rows="2" oninput="comLer()"></textarea>
+      <label>Texto final (opcional)</label><textarea id="cm-final" rows="2" placeholder="Ex.: Em caso de dúvidas, procure o responsável pela sua equipe." oninput="comLer()"></textarea>
       <label>Assinatura (uma linha por linha)</label><textarea id="cm-ass" rows="2" oninput="comLer()"></textarea>
       <div class="cm-btns">
         <button class="tn2-b g" onclick="comBaixar()">🖼 Baixar imagem</button>
@@ -1804,12 +1804,7 @@ const $c=id=>document.getElementById(id);
 function comLogo(){ if(!COM_IMG){ COM_IMG=new Image(); COM_IMG.onload=()=>comRender(); COM_IMG.src=COM_LOGO; } return COM_IMG; }
 function comFmt(k){ const p=(k||'').split('-'); return p.length===3?(+p[2])+' de '+COM_MESES[+p[1]-1]+' de '+p[0]:''; }
 function comHoje(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
-function comModelo(){ return {id:null,titulo:'COMUNICADO',data:'2026-10-12',mostrar:false,saud:'Prezados colaboradores (as),',
-  intro:'Informamos como ficará o expediente referente ao feriado de {data} (Nossa Senhora Aparecida) em cada localidade:',
-  itens:[{l:'Amazonas',t:'folga (feriado).'},{l:'Aracaju',t:'folga (feriado).'},{l:'Minas Gerais',t:'folga (feriado).'},
-   {l:'Irecê',t:'o feriado do dia 12/10 foi trocado pelo dia 05/10, já usufruído. Expediente normal no dia 12/10.'},
-   {l:'Jacobina, Feira de Santana e Serrinha',t:'expediente normal no dia 12/10. A folga será concedida em data a definir na última semana de dezembro.'}],
-  final:'Em caso de dúvidas, procure o responsável pela sua equipe.',ass:'Setor\nRH'}; }
+function comModelo(){ return {id:null,titulo:'COMUNICADO',data:comHoje(),mostrar:false,saud:'Prezados colaboradores (as),',intro:'',itens:[],final:'',ass:'Setor\nRH'}; }
 let COM=comModelo();
 function comUnits(txt,df){ const u=[]; let sp=true;
   (txt||'').replace(/\{data\}/gi,'**'+df+'**').split('**').forEach((seg,i)=>{ const b=i%2===1;
@@ -1830,13 +1825,14 @@ function comRender(){
           let x=x0; ln.u.forEach(u=>{ u.forEach(k=>{ c.font=fnt(k.b); c.fillStyle='#111'; c.fillText(k.t,x,y); x+=c.measureText(k.t).width; }); x+=gap; }); }
         last=y; y+=LH; }); };
     if(COM.saud){ para(COM.saud,ML,W-ML-MR,false); y+=27; }
-    if(COM.intro){ para(COM.intro,ML,W-ML-MR,true); y+=45; }
+    const blocos=(txt,just)=>{ const ps=(txt||'').split('\n').filter(l=>l.trim()); ps.forEach((l,i)=>{ para(l,ML,W-ML-MR,just); if(i<ps.length-1) y+=27; }); if(ps.length) y+=45; };
+    blocos(COM.intro,true);
     let n=0; (COM.itens||[]).forEach(it=>{ if(!(it.l||it.t)) return; n++;
       if(draw){ c.fillStyle='#111'; c.beginPath(); c.arc(72,y-12,4.5,0,Math.PI*2); c.fill(); }
       const l=(it.l||'').replace(/\*\*/g,'').trim();
       para((l?'**'+l+(/[:;.]$/.test(l)?'':':')+'** ':'')+(it.t||''),95,W-95-MR,true); });
     if(n) y+=45;
-    if(COM.final){ para(COM.final,ML,W-ML-MR,false); y+=45; }
+    blocos(COM.final,true);
     (COM.ass||'').split('\n').forEach(l=>{ if(l.trim()) para(l,ML,W-ML-MR,false); });
     return last; };
   const last=run(document.createElement('canvas').getContext('2d'),false), H=Math.max(720,Math.round(last+235));
@@ -1855,11 +1851,11 @@ function comRender(){
 async function comFontes(){ try{ await document.fonts.load('400 34px Inter'); await document.fonts.load('700 34px Inter'); }catch(e){} }
 function comPreencher(){ $c('cm-titulo').value=COM.titulo||''; $c('cm-data').value=COM.data||''; $c('cm-mostrar').checked=!!COM.mostrar; $c('cm-saud').value=COM.saud||''; $c('cm-intro').value=COM.intro||''; $c('cm-final').value=COM.final||''; $c('cm-ass').value=COM.ass||''; comRenderItens(); }
 function comLer(){ COM.titulo=$c('cm-titulo').value; COM.data=$c('cm-data').value; COM.mostrar=$c('cm-mostrar').checked; COM.saud=$c('cm-saud').value; COM.intro=$c('cm-intro').value; COM.final=$c('cm-final').value; COM.ass=$c('cm-ass').value; comRasc(); comRender(); }
-function comRasc(){ try{ localStorage.setItem('mariua_com_rascunho',JSON.stringify(COM)); }catch(e){} }
+function comRasc(){ try{ localStorage.setItem('mariua_com_rascunho2',JSON.stringify(COM)); }catch(e){} }
 function comRenderItens(){ $c('cm-itens').innerHTML=COM.itens.map((it,i)=>`<div class="cm-it"><input placeholder="Rótulo em negrito (ex.: Irecê)" value="${admEsc(it.l)}" oninput="COM.itens[${i}].l=this.value;comRasc();comRender()"><textarea rows="2" placeholder="Texto do item" oninput="COM.itens[${i}].t=this.value;comRasc();comRender()">${admEsc(it.t)}</textarea><button title="Subir" onclick="comItem(${i},-1)">↑</button><button title="Descer" onclick="comItem(${i},1)">↓</button><button title="Remover" onclick="comItem(${i},0)">✕</button></div>`).join(''); }
 function comItem(i,d){ if(d===0) COM.itens.splice(i,1); else { const j=i+d; if(j<0||j>=COM.itens.length) return; [COM.itens[i],COM.itens[j]]=[COM.itens[j],COM.itens[i]]; } comRenderItens(); comRasc(); comRender(); }
 function comAddItem(){ COM.itens.push({l:'',t:''}); comRenderItens(); comRender(); }
-function comNovo(){ if(!confirm('Começar um comunicado novo em branco?')) return; COM={id:null,titulo:'COMUNICADO',data:comHoje(),mostrar:false,saud:'Prezados colaboradores (as),',intro:'',itens:[],final:'Em caso de dúvidas, procure o responsável pela sua equipe.',ass:'Setor\nRH'}; comPreencher(); comRasc(); comRender(); }
+function comNovo(){ if(!confirm('Começar um comunicado novo em branco?')) return; COM=comModelo(); comPreencher(); comRasc(); comRender(); }
 async function comBaixar(){ await comFontes(); comRender(); const a=document.createElement('a'); a.download='comunicado_'+(COM.data||comHoje())+'.png'; a.href=$c('cm-canvas').toDataURL('image/png'); a.click(); showToast('✅ Imagem do comunicado gerada!'); }
 function comCopiar(){
   const df=comFmt(COM.data), tx=x=>(x||'').replace(/\{data\}/gi,df).replace(/\*\*(.+?)\*\*/g,'*$1*');
@@ -1881,7 +1877,7 @@ function comAbrir(id){ if(!COM_SALVOS[id]) return; COM=JSON.parse(JSON.stringify
 function comExcluir(id){ if(!confirm('Excluir este comunicado salvo?')) return; delete COM_SALVOS[id]; if(COM.id===id) COM.id=null; comLocalSalvos(); comLista(); if(window._fbReady) firebase.firestore().collection('comunicados').doc(id).delete().catch(()=>{}); }
 async function comInit(){
   if(!COM_PRONTO){ COM_PRONTO=true;
-    try{ const r=JSON.parse(localStorage.getItem('mariua_com_rascunho')||'null'); if(r&&r.itens) COM=r; }catch(e){}
+    try{ const r=JSON.parse(localStorage.getItem('mariua_com_rascunho2')||'null'); if(r&&r.itens) COM=r; }catch(e){}
     try{ COM_SALVOS=JSON.parse(localStorage.getItem('mariua_com_salvos')||'{}')||{}; }catch(e){ COM_SALVOS={}; } }
   comPreencher(); comLista(); comRender(); await comFontes(); comRender();
   if(window._fbReady && !window._comFb){ window._comFb=1; try{ const sn=await firebase.firestore().collection('comunicados').get(); sn.forEach(d=>{ COM_SALVOS[d.id]=d.data(); }); comLocalSalvos(); comLista(); }catch(e){ console.warn(e); } }
