@@ -179,7 +179,8 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg-page);color:var
 .orbital-home{
   display:flex;align-items:center;justify-content:center;
   min-height:calc(100vh - 58px);
-  background:radial-gradient(ellipse at 50% 40%,#fff4ef 0%,#f4f6f4 55%,#eef0f4 100%);
+  position:relative;
+  background:linear-gradient(135deg,#fffdf5 0%,#fff3cf 38%,#ffe9a8 66%,#fff7e2 100%);
   overflow:hidden;padding:12px
 }
 body.dark .orbital-home{background:radial-gradient(ellipse at 50% 40%,#1f1510 0%,#1a1f1d 55%,#16191f 100%)}
@@ -426,6 +427,28 @@ button.tn2-bd{border:none;cursor:pointer;font-family:inherit}
 .cm-sv span{cursor:pointer;flex:1}
 .cm-prev{position:sticky;top:10px}
 #cm-canvas{width:100%;height:auto;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,.15);background:#fff;display:block}
+/* ===== FUNDO ANIMADO (modo claro): luzes amarelas ===== */
+.orbital-wrap{position:relative;z-index:1}
+.orbital-home::before,.orbital-home::after{content:'';position:absolute;pointer-events:none;z-index:0}
+.orbital-home::before{inset:-20%;
+  background:
+    radial-gradient(circle at 20% 30%,rgba(255,200,60,.55) 0,transparent 36%),
+    radial-gradient(circle at 80% 22%,rgba(255,238,140,.65) 0,transparent 34%),
+    radial-gradient(circle at 68% 82%,rgba(255,176,56,.45) 0,transparent 38%),
+    radial-gradient(circle at 24% 86%,rgba(255,225,110,.55) 0,transparent 35%);
+  filter:blur(18px);animation:luzDrift 16s ease-in-out infinite alternate;will-change:transform}
+.orbital-home::after{top:-30%;bottom:-30%;left:0;width:34%;
+  background:linear-gradient(100deg,transparent 0%,rgba(255,228,110,.45) 32%,rgba(255,255,245,.85) 50%,rgba(255,228,110,.45) 68%,transparent 100%);
+  filter:blur(12px);transform:translateX(-150%) skewX(-18deg);animation:luzVarre 9s linear infinite;will-change:transform}
+@keyframes luzDrift{0%{transform:translate(0,0) scale(1) rotate(0)}50%{transform:translate(4%,-3%) scale(1.08) rotate(3deg)}100%{transform:translate(-4%,3%) scale(1.04) rotate(-3deg)}}
+@keyframes luzVarre{0%{transform:translateX(-150%) skewX(-18deg);opacity:0}12%{opacity:1}88%{opacity:1}100%{transform:translateX(420%) skewX(-18deg);opacity:0}}
+.luz-bg{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.luz-bg i{position:absolute;bottom:-24px;left:var(--l);width:var(--s);height:var(--s);border-radius:50%;
+  background:radial-gradient(circle,#fffbe0 0%,#ffd43b 50%,rgba(255,200,40,0) 72%);
+  box-shadow:0 0 14px 5px rgba(255,205,60,.55);opacity:0;animation:luzSobe var(--t) linear var(--d) infinite;will-change:transform,opacity}
+@keyframes luzSobe{0%{transform:translate(0,0) scale(.6);opacity:0}15%{opacity:.95}50%{transform:translate(20px,-48vh) scale(1.05)}85%{opacity:.75}100%{transform:translate(-16px,-100vh) scale(.7);opacity:0}}
+body.dark .orbital-home::before,body.dark .orbital-home::after,body.dark .luz-bg{display:none}
+@media(prefers-reduced-motion:reduce){.orbital-home::before,.orbital-home::after,.luz-bg i{animation:none}}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -1125,6 +1148,7 @@ function saveEditProfile(){
 <!-- ==================== HOME ==================== -->
 <div class="page active" id="page-home">
   <div class="orbital-home">
+    <div class="luz-bg" aria-hidden="true"><i style="--l:3.3%;--s:5px;--t:12.2s;--d:-0.6s"></i><i style="--l:10.6%;--s:4px;--t:11.9s;--d:-0.7s"></i><i style="--l:14.6%;--s:4px;--t:9.7s;--d:-4.1s"></i><i style="--l:18.9%;--s:8px;--t:12.4s;--d:-10.2s"></i><i style="--l:23.7%;--s:5px;--t:14.0s;--d:-8.2s"></i><i style="--l:28.7%;--s:8px;--t:12.2s;--d:-11.9s"></i><i style="--l:34.0%;--s:5px;--t:11.3s;--d:-1.6s"></i><i style="--l:39.6%;--s:6px;--t:13.5s;--d:-9.2s"></i><i style="--l:44.8%;--s:8px;--t:14.1s;--d:-5.3s"></i><i style="--l:51.9%;--s:4px;--t:13.5s;--d:-8.4s"></i><i style="--l:57.0%;--s:8px;--t:12.4s;--d:-3.9s"></i><i style="--l:62.6%;--s:7px;--t:11.9s;--d:-3.0s"></i><i style="--l:66.3%;--s:5px;--t:9.7s;--d:-2.9s"></i><i style="--l:72.9%;--s:6px;--t:14.8s;--d:-4.3s"></i><i style="--l:80.1%;--s:4px;--t:13.1s;--d:-2.2s"></i><i style="--l:82.9%;--s:7px;--t:12.4s;--d:-11.9s"></i><i style="--l:87.1%;--s:8px;--t:13.6s;--d:-11.9s"></i><i style="--l:93.4%;--s:10px;--t:11.8s;--d:-5.9s"></i></div>
     <div class="orbital-wrap">
 
       <!-- CÍRCULOS DE FUNDO -->
