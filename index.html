@@ -822,7 +822,7 @@ async function doLogin(){
     const snap=await firebase.firestore().collection('usuarios').doc(login).get();
     if(!snap.exists || snap.data().senha!==senha){ err.textContent='❌ Login ou senha incorretos.'; btn.disabled=false; return; }
     const u=snap.data();
-    profile={nome:u.nome||'',sobrenome:u.sobrenome||'',avatarId:u.avatarId||0,foto:u.foto||'',fotoMini:u.fotoMini||'',gender:u.genero||'',birthday:u.aniversario||''};
+    profile={nome:u.nome||'',sobrenome:u.sobrenome||'',avatarId:u.avatarId||0,foto:u.foto||'',fotoMini:u.fotoMini||'',fotoVer:u.fotoVer||0,gender:u.genero||'',birthday:u.aniversario||''};
     localStorage.setItem('mariua_profile',JSON.stringify(profile));
     localStorage.setItem('mariua_login',login);
     sessionStorage.setItem('mariua_acesso_ok','1');
@@ -874,6 +874,12 @@ function renderAvatarGrids(maleId, femaleId, isEdit){
 }
 
 let pFoto='', editFoto='', pFotoMini='', editFotoMini='';
+function sincronizarFoto(apagar){
+  try{ const l=localStorage.getItem('mariua_login'); if(!l||!window._fbReady) return;
+    const pr=JSON.parse(localStorage.getItem('mariua_profile')||'null')||{}, ref=firebase.firestore().collection('fotos').doc(l);
+    if(pr.foto&&/^data:image\/gif/.test(pr.foto)) ref.set({foto:pr.foto,ver:pr.fotoVer||0}).catch(e=>console.warn('foto',e)); else if(apagar) ref.delete().catch(()=>{});
+  }catch(e){ console.warn(e); }
+}
 function avMini(o){ return (o&&(o.fotoMini||o.foto)) || avSrcOf(o); }
 function avSrcOf(o){ return (o&&o.foto) || ((o&&AVATARS[o.avatarId])?AVATARS[o.avatarId].src:''); }
 function onFotoFile(inp,isEdit){
@@ -990,17 +996,17 @@ async function pFinish(){
   const bday = document.getElementById('inp-bday').value;
   const err = document.getElementById('fin-err'); err.textContent='';
   if(!pLogin){ showCreate(); return; }
-  profile = { nome, sobrenome: sobre, avatarId: pSelectedAvatar, foto: pFoto, fotoMini: pFotoMini, gender: pSelectedGender, birthday: bday };
+  profile = { nome, sobrenome: sobre, avatarId: pSelectedAvatar, foto: pFoto, fotoMini: pFotoMini, fotoVer: (pFoto?Date.now():0), gender: pSelectedGender, birthday: bday };
   try{
     const agora=new Date().toISOString();
     await firebase.firestore().collection('usuarios').doc(pLogin).set({
-      login:pLogin, senha:pPass, nome, sobrenome:sobre, avatarId:pSelectedAvatar, foto:pFoto, fotoMini:pFotoMini, genero:pSelectedGender, aniversario:bday,
+      login:pLogin, senha:pPass, nome, sobrenome:sobre, avatarId:pSelectedAvatar, foto:pFoto, fotoMini:pFotoMini, fotoVer:(pFoto?profile.fotoVer:0), genero:pSelectedGender, aniversario:bday,
       criadoEm:agora, ultimoAcesso:agora, acessoAnterior:'', totalAcessos:1
     });
     await firebase.firestore().collection('usuarios').doc(pLogin).collection('acessos').add({ts:agora});
   }catch(e){ err.textContent='Erro ao criar conta: '+e.message; return; }
   localStorage.setItem('mariua_profile', JSON.stringify(profile));
-  localStorage.setItem('mariua_login', pLogin);
+  localStorage.setItem('mariua_login', pLogin); sincronizarFoto();
   sessionStorage.setItem('mariua_acesso_ok','1');
   document.querySelectorAll('.pstep').forEach(e=>e.classList.remove('active'));
   document.getElementById('done-login').textContent=pLogin;
@@ -1060,12 +1066,13 @@ function saveEditProfile(){
   profile.nome = document.getElementById('edit-nome').value.trim() || profile.nome;
   profile.sobrenome = document.getElementById('edit-sobrenome').value.trim();
   profile.avatarId = editSelectedAvatar;
+  if((profile.foto||'')!==editFoto) profile.fotoVer = editFoto ? Date.now() : 0;
   profile.foto = editFoto; profile.fotoMini = editFotoMini;
   profile.gender = editSelectedGender;
   profile.birthday = document.getElementById('edit-bday').value;
   localStorage.setItem('mariua_profile', JSON.stringify(profile));
-  try{ const l=localStorage.getItem('mariua_login'); if(l&&window._fbReady) firebase.firestore().collection('usuarios').doc(l).set({nome:profile.nome,sobrenome:profile.sobrenome,avatarId:profile.avatarId,foto:profile.foto||'',fotoMini:profile.fotoMini||'',genero:profile.gender,aniversario:profile.birthday},{merge:true}); }catch(e){}
-  if(window._reRegistrarPresenca) window._reRegistrarPresenca();
+  try{ const l=localStorage.getItem('mariua_login'); if(l&&window._fbReady) firebase.firestore().collection('usuarios').doc(l).set({nome:profile.nome,sobrenome:profile.sobrenome,avatarId:profile.avatarId,foto:profile.foto||'',fotoMini:profile.fotoMini||'',fotoVer:profile.fotoVer||0,genero:profile.gender,aniversario:profile.birthday},{merge:true}); }catch(e){}
+  sincronizarFoto(true); if(window._reRegistrarPresenca) window._reRegistrarPresenca();
   closeEditProfile();
   applyProfile();
 }
@@ -3368,7 +3375,7 @@ function admRenderManage(){
     .sort((a,b)=>(b.ultimoAcesso||'').localeCompare(a.ultimoAcesso||''));
   if(!list.length){ el.innerHTML='<div style="text-align:center;color:rgba(255,255,255,.3);padding:20px">Nenhum usuário encontrado</div>'; return; }
   el.innerHTML=list.map(u=>{
-    const av=u.fotoMini||u.foto||((typeof AVATARS!=='undefined'&&AVATARS[u.avatarId])?AVATARS[u.avatarId].src:'');
+    const av=u.foto||u.fotoMini||((typeof AVATARS!=='undefined'&&AVATARS[u.avatarId])?AVATARS[u.avatarId].src:'');
     return `<div class="user-row" id="urow-${u.id}">
       <img src="${av}" onerror="this.style.background='#0f4a37';this.removeAttribute('src')">
       <div class="user-info">
@@ -3437,7 +3444,7 @@ async function loadAdminData(){
     } else {
       todayEl.innerHTML = todayUsers.map(d=>{
         const u = d.data();
-        const av = u.fotoMini || u.foto || ((typeof AVATARS !== 'undefined' && AVATARS[u.avatarId]) ? AVATARS[u.avatarId].src : '');
+        const av = u.foto || u.fotoMini || ((typeof AVATARS !== 'undefined' && AVATARS[u.avatarId]) ? AVATARS[u.avatarId].src : '');
         return `<div class="user-row">
           <img src="${av}" onerror="this.style.background='#0f4a37';this.removeAttribute('src')">
           <div class="user-info">
@@ -3481,13 +3488,20 @@ async function adminDeleteUser(uid){
     // Presence (temporary)
     const presRef = _db.collection('presenca').doc(uid);
     const AVIDS = typeof AVATARS !== 'undefined' ? AVATARS : [];
+    const gifCache = (window._gifCache = window._gifCache||{});
+    function animar(img,id,fv){ const k=id+'|'+(fv||0); let c=gifCache[k];
+      if(!c){ c=gifCache[k]={src:null,p:_db.collection('fotos').doc(id).get().then(d=>{ const f=d.exists&&d.data().foto; if(f) c.src=f; return c.src; }).catch(()=>null)}; }
+      if(c.src){ img.src=c.src; return; } c.p.then(src=>{ if(src) img.src=src; }); }
+    sincronizarFoto();
     const curAv = ()=>{ const pr=JSON.parse(localStorage.getItem('mariua_profile')||'null'); return (pr&&(pr.fotoMini||pr.foto))||((pr&&AVIDS[pr.avatarId])?AVIDS[pr.avatarId].src:''); };
     
     function registrar(){
       presRef.set({
         ts: Date.now(),
         nome: (profile&&profile.nome)||'Usuário',
-        avatar: curAv()
+        avatar: curAv(),
+        gif: (()=>{ const pr=JSON.parse(localStorage.getItem('mariua_profile')||'null'); return !!(pr&&pr.foto&&/^data:image\/gif/.test(pr.foto)); })(),
+        fv: (()=>{ const pr=JSON.parse(localStorage.getItem('mariua_profile')||'null'); return (pr&&pr.fotoVer)||0; })()
       });
     }
     registrar();
@@ -3501,7 +3515,7 @@ async function adminDeleteUser(uid){
       snap.docs.forEach(d=>{
         if(d.id===uid) return;
         const data = d.data();
-        if(agora-(data.ts||0)<60000) outros.push({nome:data.nome||'Usuário',avatar:data.avatar||''});
+        if(agora-(data.ts||0)<60000) outros.push({id:d.id,nome:data.nome||'Usuário',avatar:data.avatar||'',gif:!!data.gif,fv:data.fv||0});
         else d.ref.delete();
       });
       const container = document.getElementById('online-avatars');
@@ -3515,6 +3529,7 @@ async function adminDeleteUser(uid){
         img.src = u.avatar||'';
         img.alt = u.nome;
         if(!u.avatar) img.style.background='#0f4a37';
+        if(u.gif) animar(img,u.id,u.fv);
         const tip = document.createElement('div');
         tip.className='online-av-tip';
         tip.textContent = u.nome;
