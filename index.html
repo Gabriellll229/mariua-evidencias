@@ -180,10 +180,8 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg-page);color:var
   display:flex;align-items:center;justify-content:center;
   min-height:calc(100vh - 58px);
   position:relative;
-  background:linear-gradient(135deg,#fffdf5 0%,#fff3cf 38%,#ffe9a8 66%,#fff7e2 100%);
   overflow:hidden;padding:12px
 }
-body.dark .orbital-home{background:linear-gradient(180deg,#05202f 0%,#031523 40%,#010a14 75%,#00050b 100%)}
 .orbital-wrap{
   position:relative;width:700px;height:700px;flex-shrink:0;
 }
@@ -430,40 +428,40 @@ button.tn2-bd{border:none;cursor:pointer;font-family:inherit}
 #cm-canvas{width:100%;height:auto;border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,.15);background:#fff;display:block}
 /* ===== FUNDO ANIMADO (modo claro): luzes amarelas ===== */
 .orbital-wrap{position:relative;z-index:1}
-.orbital-home::before,.orbital-home::after{content:'';position:absolute;pointer-events:none;z-index:0}
-.orbital-home::before{inset:-20%;
+#fundo-animado::before,#fundo-animado::after{content:'';position:absolute;pointer-events:none;z-index:0}
+#fundo-animado::before{inset:-20%;
   background:
-    radial-gradient(circle at 20% 30%,rgba(255,200,60,.55) 0,transparent 36%),
-    radial-gradient(circle at 80% 22%,rgba(255,238,140,.65) 0,transparent 34%),
-    radial-gradient(circle at 68% 82%,rgba(255,176,56,.45) 0,transparent 38%),
-    radial-gradient(circle at 24% 86%,rgba(255,225,110,.55) 0,transparent 35%);
+    radial-gradient(circle at 20% 30%,rgba(255,200,60,.42) 0,transparent 36%),
+    radial-gradient(circle at 80% 22%,rgba(255,238,140,.50) 0,transparent 34%),
+    radial-gradient(circle at 68% 82%,rgba(255,176,56,.34) 0,transparent 38%),
+    radial-gradient(circle at 24% 86%,rgba(255,225,110,.42) 0,transparent 35%);
   filter:blur(18px);animation:luzDrift 16s ease-in-out infinite alternate;will-change:transform}
-.orbital-home::after{top:-30%;bottom:-30%;left:0;width:34%;
-  background:linear-gradient(100deg,transparent 0%,rgba(255,228,110,.45) 32%,rgba(255,255,245,.85) 50%,rgba(255,228,110,.45) 68%,transparent 100%);
+#fundo-animado::after{top:-30%;bottom:-30%;left:0;width:34%;
+  background:linear-gradient(100deg,transparent 0%,rgba(255,228,110,.30) 32%,rgba(255,252,235,.50) 50%,rgba(255,228,110,.30) 68%,transparent 100%);
   filter:blur(12px);transform:translateX(-150%) skewX(-18deg);animation:luzVarre 9s linear infinite;will-change:transform}
 @keyframes luzDrift{0%{transform:translate(0,0) scale(1) rotate(0)}50%{transform:translate(4%,-3%) scale(1.08) rotate(3deg)}100%{transform:translate(-4%,3%) scale(1.04) rotate(-3deg)}}
 @keyframes luzVarre{0%{transform:translateX(-150%) skewX(-18deg);opacity:0}12%{opacity:1}88%{opacity:1}100%{transform:translateX(420%) skewX(-18deg);opacity:0}}
 .luz-bg{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
 .luz-bg i{position:absolute;bottom:-24px;left:var(--l);width:var(--s);height:var(--s);border-radius:50%;
-  background:radial-gradient(circle,#fffbe0 0%,#ffd43b 50%,rgba(255,200,40,0) 72%);
-  box-shadow:0 0 14px 5px rgba(255,205,60,.55);opacity:0;animation:luzSobe var(--t) linear var(--d) infinite;will-change:transform,opacity}
+  background:radial-gradient(circle,#fff1b0 0%,#f2c230 50%,rgba(240,190,40,0) 72%);
+  box-shadow:0 0 12px 4px rgba(235,185,50,.40);opacity:0;animation:luzSobe var(--t) linear var(--d) infinite;will-change:transform,opacity}
 @keyframes luzSobe{0%{transform:translate(0,0) scale(.6);opacity:0}15%{opacity:.95}50%{transform:translate(20px,-48vh) scale(1.05)}85%{opacity:.75}100%{transform:translate(-16px,-100vh) scale(.7);opacity:0}}
-body.dark .orbital-home::before{background:
+body.dark #fundo-animado::before{background:
     radial-gradient(circle at 20% 28%,rgba(0,200,210,.30) 0,transparent 36%),
     radial-gradient(circle at 82% 22%,rgba(50,120,255,.28) 0,transparent 34%),
     radial-gradient(circle at 66% 84%,rgba(0,160,180,.30) 0,transparent 38%),
     radial-gradient(circle at 22% 86%,rgba(70,90,230,.26) 0,transparent 35%)}
-body.dark .orbital-home::after{background:linear-gradient(100deg,transparent 0%,rgba(40,170,205,.12) 32%,rgba(150,235,255,.30) 50%,rgba(40,170,205,.12) 68%,transparent 100%)}
+body.dark #fundo-animado::after{background:linear-gradient(100deg,transparent 0%,rgba(40,170,205,.12) 32%,rgba(150,235,255,.30) 50%,rgba(40,170,205,.12) 68%,transparent 100%)}
 body.dark .luz-bg i{background:radial-gradient(circle,#eaffff 0%,#4fe0e8 50%,rgba(0,200,220,0) 72%);box-shadow:0 0 14px 5px rgba(0,210,235,.5)}
 body.dark .luz-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 46%,transparent 28%,rgba(0,4,10,.72) 100%)}
-@media(prefers-reduced-motion:reduce){.orbital-home::before,.orbital-home::after,.luz-bg i{animation:none}}
+@media(prefers-reduced-motion:reduce){#fundo-animado::before,#fundo-animado::after,.luz-bg i{animation:none}}
 /* ===== SIDEBAR ANIMADA (claro = luzes amarelas · escuro = abismo) ===== */
-#sidebar{background:linear-gradient(180deg,#fffdf4 0%,#fff1c8 45%,#ffe39a 100%);border-right-color:rgba(230,170,40,.35)}
+#sidebar{background:linear-gradient(180deg,#f7edd2 0%,#f1deaa 45%,#e8cf8c 100%);border-right-color:rgba(230,170,40,.35)}
 #sidebar::before{content:'';position:absolute;inset:-10%;pointer-events:none;z-index:0;
-  background:radial-gradient(circle at 25% 15%,rgba(255,205,70,.55) 0,transparent 40%),radial-gradient(circle at 80% 50%,rgba(255,236,140,.6) 0,transparent 38%),radial-gradient(circle at 30% 90%,rgba(255,178,58,.45) 0,transparent 42%);
+  background:radial-gradient(circle at 25% 15%,rgba(255,205,70,.43) 0,transparent 40%),radial-gradient(circle at 80% 50%,rgba(255,236,140,.47) 0,transparent 38%),radial-gradient(circle at 30% 90%,rgba(255,178,58,.35) 0,transparent 42%);
   filter:blur(14px);animation:luzDrift 14s ease-in-out infinite alternate;will-change:transform}
 #sidebar::after{content:'';position:absolute;left:-20%;right:-20%;top:0;height:28%;pointer-events:none;z-index:0;
-  background:linear-gradient(180deg,transparent 0%,rgba(255,228,110,.4) 35%,rgba(255,255,245,.75) 50%,rgba(255,228,110,.4) 65%,transparent 100%);
+  background:linear-gradient(180deg,transparent 0%,rgba(255,228,110,.30) 35%,rgba(255,252,235,.50) 50%,rgba(255,228,110,.30) 65%,transparent 100%);
   filter:blur(10px);transform:translateY(-130%) skewY(-10deg);animation:luzVarreV 8s linear infinite;will-change:transform}
 @keyframes luzVarreV{0%{transform:translateY(-130%) skewY(-10deg);opacity:0}12%{opacity:1}88%{opacity:1}100%{transform:translateY(430%) skewY(-10deg);opacity:0}}
 #sidebar>.sidebar-toggle,#sidebar>.sidebar-nav{position:relative;z-index:1}
@@ -478,6 +476,13 @@ body.dark .sidebar-toggle{border-bottom-color:rgba(60,200,225,.18)}
 body.dark .sidebar-item:hover{background:rgba(0,200,225,.10)}
 body.dark .sidebar-item.active{background:rgba(0,200,225,.16);color:#8ff0f5}
 @media(prefers-reduced-motion:reduce){#sidebar::before,#sidebar::after{animation:none}}
+/* ===== FUNDO ANIMADO GLOBAL (todas as abas) ===== */
+#fundo-animado{position:fixed;top:58px;left:0;right:0;bottom:0;overflow:hidden;pointer-events:none;z-index:0;
+  background:linear-gradient(135deg,#f6ecd2 0%,#f0dfa8 38%,#e7cf8a 66%,#f3e6c4 100%)}
+body.dark #fundo-animado{background:linear-gradient(180deg,#05202f 0%,#031523 40%,#010a14 75%,#00050b 100%)}
+#app-shell{position:relative;z-index:1}
+#app-content,.page,.orbital-home{background:transparent}
+#page-turno,#page-comunicados{background:transparent}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -1125,6 +1130,7 @@ function saveEditProfile(){
 
 
 <!-- APP SHELL: sidebar + conteúdo -->
+<div id="fundo-animado" aria-hidden="true"><div class="luz-bg" aria-hidden="true"><i style="--l:3.3%;--s:5px;--t:12.2s;--d:-0.6s"></i><i style="--l:10.6%;--s:4px;--t:11.9s;--d:-0.7s"></i><i style="--l:14.6%;--s:4px;--t:9.7s;--d:-4.1s"></i><i style="--l:18.9%;--s:8px;--t:12.4s;--d:-10.2s"></i><i style="--l:23.7%;--s:5px;--t:14.0s;--d:-8.2s"></i><i style="--l:28.7%;--s:8px;--t:12.2s;--d:-11.9s"></i><i style="--l:34.0%;--s:5px;--t:11.3s;--d:-1.6s"></i><i style="--l:39.6%;--s:6px;--t:13.5s;--d:-9.2s"></i><i style="--l:44.8%;--s:8px;--t:14.1s;--d:-5.3s"></i><i style="--l:51.9%;--s:4px;--t:13.5s;--d:-8.4s"></i><i style="--l:57.0%;--s:8px;--t:12.4s;--d:-3.9s"></i><i style="--l:62.6%;--s:7px;--t:11.9s;--d:-3.0s"></i><i style="--l:66.3%;--s:5px;--t:9.7s;--d:-2.9s"></i><i style="--l:72.9%;--s:6px;--t:14.8s;--d:-4.3s"></i><i style="--l:80.1%;--s:4px;--t:13.1s;--d:-2.2s"></i><i style="--l:82.9%;--s:7px;--t:12.4s;--d:-11.9s"></i><i style="--l:87.1%;--s:8px;--t:13.6s;--d:-11.9s"></i><i style="--l:93.4%;--s:10px;--t:11.8s;--d:-5.9s"></i></div></div>
 <div id="app-shell">
 
 <!-- SIDEBAR -->
@@ -1185,8 +1191,7 @@ function saveEditProfile(){
 <!-- ==================== HOME ==================== -->
 <div class="page active" id="page-home">
   <div class="orbital-home">
-    <div class="luz-bg" aria-hidden="true"><i style="--l:3.3%;--s:5px;--t:12.2s;--d:-0.6s"></i><i style="--l:10.6%;--s:4px;--t:11.9s;--d:-0.7s"></i><i style="--l:14.6%;--s:4px;--t:9.7s;--d:-4.1s"></i><i style="--l:18.9%;--s:8px;--t:12.4s;--d:-10.2s"></i><i style="--l:23.7%;--s:5px;--t:14.0s;--d:-8.2s"></i><i style="--l:28.7%;--s:8px;--t:12.2s;--d:-11.9s"></i><i style="--l:34.0%;--s:5px;--t:11.3s;--d:-1.6s"></i><i style="--l:39.6%;--s:6px;--t:13.5s;--d:-9.2s"></i><i style="--l:44.8%;--s:8px;--t:14.1s;--d:-5.3s"></i><i style="--l:51.9%;--s:4px;--t:13.5s;--d:-8.4s"></i><i style="--l:57.0%;--s:8px;--t:12.4s;--d:-3.9s"></i><i style="--l:62.6%;--s:7px;--t:11.9s;--d:-3.0s"></i><i style="--l:66.3%;--s:5px;--t:9.7s;--d:-2.9s"></i><i style="--l:72.9%;--s:6px;--t:14.8s;--d:-4.3s"></i><i style="--l:80.1%;--s:4px;--t:13.1s;--d:-2.2s"></i><i style="--l:82.9%;--s:7px;--t:12.4s;--d:-11.9s"></i><i style="--l:87.1%;--s:8px;--t:13.6s;--d:-11.9s"></i><i style="--l:93.4%;--s:10px;--t:11.8s;--d:-5.9s"></i></div>
-    <div class="orbital-wrap">
+        <div class="orbital-wrap">
 
       <!-- CÍRCULOS DE FUNDO -->
       <div class="orb-ring orb-ring-1"></div>
