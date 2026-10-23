@@ -483,6 +483,37 @@ body.dark #fundo-animado{background:linear-gradient(180deg,#05202f 0%,#031523 40
 #app-shell{position:relative;z-index:1}
 #app-content,.page,.orbital-home{background:transparent}
 #page-turno,#page-comunicados{background:transparent}
+/* ===== ABA LPT - EVIDÊNCIA DE LIGAÇÃO ===== */
+#page-lpt{padding:16px;color:var(--text)}
+.lp-wrap{max-width:1100px;margin:0 auto}
+.lp-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.lp-titulo{font-size:22px;font-weight:800;color:#007a36}
+body.dark .lp-titulo{color:#6ee7a0}
+.lp-btns{display:flex;gap:8px;flex-wrap:wrap}
+.lp-b{padding:9px 16px;border-radius:8px;border:1.5px solid #00a343;background:var(--bg-card);color:#00a343;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit}
+.lp-b.pri{background:#00a343;color:#fff}
+.lp-b:hover{filter:brightness(1.08)}
+.lp-card{background:var(--bg-card);border-radius:12px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.lp-h{font-weight:800;font-size:14px;color:#00a343;letter-spacing:.5px;margin-bottom:10px;text-transform:uppercase}
+.lp-sub{font-size:11px;font-weight:600;color:var(--text-sec);text-transform:none;letter-spacing:0;margin-left:6px}
+.lp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.lp-grid label,.lp-cli label{font-size:11px;font-weight:700;color:var(--text-sec);display:block}
+.lp-card input[type=text],.lp-card input:not([type]),.lp-card input[type=number]{width:100%;box-sizing:border-box;padding:8px 10px;margin-top:3px;border:1px solid var(--border);border-radius:8px;background:var(--bg-input);color:var(--text);font-family:inherit;font-size:13px}
+.lp-cli{border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:12px}
+.lp-cli-top{display:grid;grid-template-columns:70px 1.6fr 1fr 90px 1fr 1fr 36px;gap:8px;align-items:end}
+@media(max-width:900px){.lp-cli-top{grid-template-columns:1fr 1fr}}
+.lp-fotos{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:10px}
+.lp-slot{position:relative;height:120px;border:2px dashed var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:11px;font-weight:700;color:var(--text-sec);cursor:pointer;overflow:hidden;background:var(--bg-input)}
+.lp-slot:hover{border-color:#00a343}
+.lp-slot.ok{border-style:solid;border-color:#00a343;background:var(--bg-input)}
+.lp-slot img{width:100%;height:100%;object-fit:contain}
+.lp-slot .x{position:absolute;top:4px;right:4px;border:none;border-radius:50%;width:22px;height:22px;background:rgba(0,0,0,.65);color:#fff;cursor:pointer}
+.lp-del{height:34px;border:none;border-radius:8px;background:#d9534f;color:#fff;cursor:pointer}
+.lp-ex{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-bottom:10px}
+.lp-exi{border:1px solid var(--border);border-radius:8px;padding:6px;position:relative}
+.lp-exi img{width:100%;height:110px;object-fit:contain;background:var(--bg-input);border-radius:6px;display:block}
+.lp-exi .x{position:absolute;top:10px;right:10px;border:none;border-radius:50%;width:22px;height:22px;background:rgba(0,0,0,.65);color:#fff;cursor:pointer}
+.lp-chk{display:flex;gap:8px;align-items:center;font-size:13px;font-weight:600}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -1158,6 +1189,10 @@ function saveEditProfile(){
       <span class="sidebar-label">Obras Simplificadas</span>
       <span class="sidebar-arrow">›</span>
     </div>
+    <div class="sidebar-item" id="sb-lpt" onclick="goTo('lpt')">
+      <div class="sidebar-icon">💡</div>
+      <span class="sidebar-label">LPT Ligação</span>
+    </div>
     <div class="sidebar-item" id="sb-turno" onclick="goTo('turno')">
       <div class="sidebar-icon">⏱️</div>
       <span class="sidebar-label">Turnos</span>
@@ -1201,12 +1236,13 @@ function saveEditProfile(){
       <!-- LINHAS DOS RAIOS (SVG) — do bordo do centro até o bordo de cada nó -->
       <svg class="orb-lines" viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg">
         <line x1="350" y1="268" x2="350" y2="148" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
-        <line x1="414" y1="299" x2="508" y2="224" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
-        <line x1="430" y1="368" x2="547" y2="395" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
-        <line x1="386" y1="424" x2="438" y2="532" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
-        <line x1="314" y1="424" x2="262" y2="532" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
-        <line x1="270" y1="368" x2="153" y2="395" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
-        <line x1="286" y1="299" x2="192" y2="224" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
+        <line x1="408" y1="292" x2="493" y2="207" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
+        <line x1="432" y1="350" x2="552" y2="350" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
+        <line x1="408" y1="408" x2="493" y2="493" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
+        <line x1="350" y1="432" x2="350" y2="552" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
+        <line x1="292" y1="408" x2="207" y2="493" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
+        <line x1="268" y1="350" x2="148" y2="350" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
+        <line x1="292" y1="292" x2="207" y2="207" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
       </svg>
 
       <!-- CENTRO: logo Mariuá -->
@@ -1216,32 +1252,36 @@ function saveEditProfile(){
         <div class="orb-center-sub">Evidências Fotográficas</div>
       </div>
 
-      <!-- MÓDULOS ORBITAIS — 7 nós igualmente espaçados -->
+      <!-- MÓDULOS ORBITAIS — 8 nós igualmente espaçados -->
       <div class="orb-node" style="--ax:350px;--ay:110px" onclick="goTo('cava')">
         <div class="orb-btn">⛏️</div>
         <div class="orb-label">Cava em Rocha</div>
       </div>
-      <div class="orb-node" style="--ax:538px;--ay:200px" onclick="goTo('poda')">
+      <div class="orb-node" style="--ax:520px;--ay:180px" onclick="goTo('poda')">
         <div class="orb-btn">🌿</div>
         <div class="orb-label">Poda</div>
       </div>
-      <div class="orb-node" style="--ax:584px;--ay:403px" onclick="goTo('obras')">
+      <div class="orb-node" style="--ax:590px;--ay:350px" onclick="goTo('obras')">
         <div class="orb-btn">🏗️</div>
         <div class="orb-label">Obras<br>Simplificadas</div>
       </div>
-      <div class="orb-node" style="--ax:454px;--ay:566px" onclick="goTo('turno')">
+      <div class="orb-node" style="--ax:520px;--ay:520px" onclick="goTo('lpt')">
+        <div class="orb-btn">💡</div>
+        <div class="orb-label">LPT<br>Ligação</div>
+      </div>
+      <div class="orb-node" style="--ax:350px;--ay:590px" onclick="goTo('turno')">
         <div class="orb-btn">⏱️</div>
         <div class="orb-label">Turnos</div>
       </div>
-      <div class="orb-node" style="--ax:246px;--ay:566px" onclick="goTo('comunicados')">
+      <div class="orb-node" style="--ax:180px;--ay:520px" onclick="goTo('comunicados')">
         <div class="orb-btn">📢</div>
         <div class="orb-label">Comunicados</div>
       </div>
-      <div class="orb-node" style="--ax:116px;--ay:403px" onclick="goTo('carregar')">
+      <div class="orb-node" style="--ax:110px;--ay:350px" onclick="goTo('carregar')">
         <div class="orb-btn">📂</div>
         <div class="orb-label">Carregar Dados</div>
       </div>
-      <div class="orb-node" style="--ax:162px;--ay:200px" onclick="abrirRegistros()">
+      <div class="orb-node" style="--ax:180px;--ay:180px" onclick="abrirRegistros()">
         <div class="orb-btn">☁️</div>
         <div class="orb-label">Registros<br>Salvos</div>
       </div>
@@ -1415,6 +1455,36 @@ function saveEditProfile(){
       <label style="margin-top:18px">Comunicados salvos</label><div id="cm-lista"></div>
     </div>
     <div class="cm-prev"><canvas id="cm-canvas" width="1600" height="1218"></canvas></div>
+  </div>
+</div>
+
+<div class="page" id="page-lpt">
+  <div class="lp-wrap">
+    <div class="lp-top">
+      <div class="lp-titulo">💡 LPT — Evidência de Ligação</div>
+      <div class="lp-btns"><button class="lp-b pri" onclick="lptGerarPDF()">📄 Gerar PDF</button><button class="lp-b" onclick="lptLimpar()">🗑 Limpar tudo</button></div>
+    </div>
+    <div class="lp-card"><div class="lp-h">Dados da obra</div>
+      <div class="lp-grid">
+        <label>NUM_NOTA<input type="text" id="lp-nota" oninput="lptLer()"></label>
+        <label>NUM_PROJETO<input type="text" id="lp-proj" oninput="lptLer()"></label>
+        <label>TÍTULO<input type="text" id="lp-titulo" oninput="lptLer()"></label>
+        <label>MUNICÍPIO<input type="text" id="lp-mun" oninput="lptLer()"></label>
+        <label>EPS<input type="text" id="lp-eps" oninput="lptLer()"></label>
+        <label>AR<input type="text" id="lp-ar" oninput="lptLer()"></label>
+      </div>
+    </div>
+    <div class="lp-card"><div class="lp-h">Clientes e fotos <span class="lp-sub">4 fotos por cliente · as fotos devem mostrar Lat/Long</span></div>
+      <div id="lp-clientes"></div>
+      <button class="lp-b" onclick="lptAddCliente()">+ Adicionar cliente</button>
+    </div>
+    <div class="lp-card"><div class="lp-h">Evidências adicionais <span class="lp-sub">ex.: entrega do Guia do Cliente, primeira lâmpada acesa</span></div>
+      <div id="lp-extras" class="lp-ex"></div>
+      <button class="lp-b" onclick="document.getElementById('lp-file-ex').click()">+ Adicionar fotos</button>
+      <input type="file" id="lp-file-ex" accept="image/*" multiple style="display:none" onchange="lptAddExtras(this)">
+    </div>
+    <div class="lp-card"><label class="lp-chk"><input type="checkbox" id="lp-orient" checked onchange="lptLer()"> Incluir a página de Orientações no final do PDF</label></div>
+    <input type="file" id="lp-file" accept="image/*" style="display:none" onchange="lptFoto(this)">
   </div>
 </div>
 
@@ -1947,6 +2017,97 @@ function fitOrbital(){
   const sc=Math.min(1,(window.innerHeight-top-24)/700,((c?c.clientWidth:window.innerWidth)-24)/700); w.style.zoom=Math.max(.35,sc);
 }
 window.addEventListener('resize',fitOrbital); window.addEventListener('load',()=>setTimeout(fitOrbital,50));
+/* ===== LPT - EVIDÊNCIA DE LIGAÇÃO ===== */
+const LPT_FOTOS=['Foto 1 – Fachada e padrão','Foto 2 – Medidor (leitura zero)','Foto 3 – Instalação interna','Foto 4 – Centro de distribuição'];
+let LPT={nota:'',proj:'',titulo:'',mun:'',eps:'',ar:'',orient:true,clientes:[],extras:[]}, LPT_PRONTO=false, LPT_TIMER=null, LPT_SLOT=null;
+const lpt$=id=>document.getElementById(id);
+function lptIdb(){ return new Promise((res,rej)=>{ const r=indexedDB.open('mariua_lpt',1); r.onupgradeneeded=()=>r.result.createObjectStore('kv'); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); }
+async function lptIdbSet(v){ const d=await lptIdb(); return new Promise((res,rej)=>{ const t=d.transaction('kv','readwrite'); t.objectStore('kv').put(v,'estado'); t.oncomplete=res; t.onerror=()=>rej(t.error); }); }
+async function lptIdbGet(){ const d=await lptIdb(); return new Promise((res,rej)=>{ const q=d.transaction('kv').objectStore('kv').get('estado'); q.onsuccess=()=>res(q.result); q.onerror=()=>rej(q.error); }); }
+function lptSalvar(){ clearTimeout(LPT_TIMER); LPT_TIMER=setTimeout(()=>{ lptIdbSet(JSON.parse(JSON.stringify(LPT))).catch(()=>{}); },600); }
+function lptNovoCliente(){ return {portal:'',nome:'',medidor:'',inst:false,lat:'',lng:'',fotos:[null,null,null,null]}; }
+async function lptInit(){
+  if(!LPT_PRONTO){ LPT_PRONTO=true; try{ const e=await lptIdbGet(); if(e) LPT=e; }catch(x){} if(!LPT.clientes.length) LPT.clientes.push(lptNovoCliente()); }
+  lpt$('lp-nota').value=LPT.nota||''; lpt$('lp-proj').value=LPT.proj||''; lpt$('lp-titulo').value=LPT.titulo||''; lpt$('lp-mun').value=LPT.mun||''; lpt$('lp-eps').value=LPT.eps||''; lpt$('lp-ar').value=LPT.ar||''; lpt$('lp-orient').checked=LPT.orient!==false;
+  lptRender();
+}
+function lptLer(){ LPT.nota=lpt$('lp-nota').value; LPT.proj=lpt$('lp-proj').value; LPT.titulo=lpt$('lp-titulo').value; LPT.mun=lpt$('lp-mun').value; LPT.eps=lpt$('lp-eps').value; LPT.ar=lpt$('lp-ar').value; LPT.orient=lpt$('lp-orient').checked; lptSalvar(); }
+function lptSet(i,k,v){ LPT.clientes[i][k]=v; lptSalvar(); }
+function lptAddCliente(){ LPT.clientes.push(lptNovoCliente()); lptRender(); lptSalvar(); }
+function lptDelCliente(i){ if(!confirm('Remover este cliente e as fotos dele?')) return; LPT.clientes.splice(i,1); if(!LPT.clientes.length) LPT.clientes.push(lptNovoCliente()); lptRender(); lptSalvar(); }
+function lptLimpar(){ if(!confirm('Apagar todos os dados e fotos deste relatório?')) return; LPT={nota:'',proj:'',titulo:'',mun:'',eps:'',ar:'',orient:true,clientes:[lptNovoCliente()],extras:[]}; lptInit(); lptSalvar(); }
+function lptRender(){
+  const e=admEsc;
+  lpt$('lp-clientes').innerHTML=LPT.clientes.map((c,i)=>`<div class="lp-cli"><div class="lp-cli-top">
+    <label>PORTAL<input type="text" value="${e(c.portal)}" oninput="lptSet(${i},'portal',this.value)"></label>
+    <label>NOME_CLIENTE<input type="text" value="${e(c.nome)}" oninput="lptSet(${i},'nome',this.value)"></label>
+    <label>Nº MEDIDOR<input type="text" value="${e(c.medidor)}" oninput="lptSet(${i},'medidor',this.value)"></label>
+    <label>INST. INTERNA<br><input type="checkbox" style="width:20px;height:20px;margin-top:8px" ${c.inst?'checked':''} onchange="lptSet(${i},'inst',this.checked)"></label>
+    <label>LAT<input type="text" value="${e(c.lat)}" oninput="lptSet(${i},'lat',this.value)"></label>
+    <label>LONG<input type="text" value="${e(c.lng)}" oninput="lptSet(${i},'lng',this.value)"></label>
+    <button class="lp-del" title="Remover cliente" onclick="lptDelCliente(${i})">🗑</button></div>
+    <div class="lp-fotos">${c.fotos.map((f,j)=>`<div class="lp-slot ${f?'ok':''}" onclick="lptEscolher(${i},${j})" title="${LPT_FOTOS[j]}">${f?`<img src="${f}" alt=""><button class="x" onclick="event.stopPropagation();lptTirar(${i},${j})">✕</button>`:`+ ${LPT_FOTOS[j].replace(' – ','<br>')}`}</div>`).join('')}</div></div>`).join('');
+  lpt$('lp-extras').innerHTML=LPT.extras.map((x,i)=>`<div class="lp-exi"><img src="${x.img}" alt=""><button class="x" onclick="lptTirarExtra(${i})">✕</button><input type="text" placeholder="Legenda (opcional)" value="${e(x.leg)}" oninput="LPT.extras[${i}].leg=this.value;lptSalvar()"></div>`).join('');
+}
+function lptEscolher(i,j){ LPT_SLOT=[i,j]; lpt$('lp-file').click(); }
+function lptTirar(i,j){ LPT.clientes[i].fotos[j]=null; lptRender(); lptSalvar(); }
+function lptTirarExtra(i){ LPT.extras.splice(i,1); lptRender(); lptSalvar(); }
+function lptImg(file,max){ return new Promise((res,rej)=>{ const u=URL.createObjectURL(file), im=new Image();
+  im.onload=()=>{ const k=Math.min(1,max/Math.max(im.width,im.height)), c=document.createElement('canvas'); c.width=Math.round(im.width*k); c.height=Math.round(im.height*k);
+    const x=c.getContext('2d'); x.fillStyle='#fff'; x.fillRect(0,0,c.width,c.height); x.drawImage(im,0,0,c.width,c.height); URL.revokeObjectURL(u); res(c.toDataURL('image/jpeg',0.82)); };
+  im.onerror=()=>{ URL.revokeObjectURL(u); rej(new Error('imagem inválida')); }; im.src=u; }); }
+async function lptFoto(inp){ const f=inp.files[0]; inp.value=''; if(!f||!LPT_SLOT) return; try{ const d=await lptImg(f,1100); LPT.clientes[LPT_SLOT[0]].fotos[LPT_SLOT[1]]=d; lptRender(); lptSalvar(); }catch(e){ showToast('❌ Não consegui ler essa imagem'); } }
+async function lptAddExtras(inp){ const fs=[...inp.files]; inp.value=''; for(const f of fs){ try{ LPT.extras.push({img:await lptImg(f,1100),leg:''}); }catch(e){ showToast('❌ Imagem inválida: '+f.name); } } lptRender(); lptSalvar(); }
+function lptDims(src){ return new Promise(res=>{ const im=new Image(); im.onload=()=>res({w:im.width,h:im.height}); im.onerror=()=>res({w:4,h:3}); im.src=src; }); }
+const LPT_ORIENT=[['[Orientações]',1],['',0],['Este relatório fotográfico é obrigatório para os processos de ligação de clientes do Programa Luz para Todos (LPT), com o objetivo de comprovar a execução dos serviços e a energização das unidades consumidoras.',0],['',0],['Todas as fotografias devem apresentar, de forma visível, as informações de latitude e longitude (Lat/Long) registradas na própria imagem.',0],['',0],['O relatório também possui um campo para evidências adicionais, onde podem ser inseridas fotos que demonstrem o impacto social da obra, como entrega do Guia do Cliente, cliente recebendo energia pela primeira vez, acionamento da primeira lâmpada e outros registros relevantes para o Programa Luz para Todos.',0],['',0],['Critérios: Cada unidade consumidora deverá conter as seguintes evidências:',1],['',0],['Foto 1 – Fachada da residência e padrão instalado',1],['Registrar a fachada do imóvel juntamente com o padrão de entrada instalado, permitindo a identificação da unidade consumidora.',0],['',0],['Foto 2 – Medidor evidenciando leitura zero',1],['A foto deve permitir a visualização clara do número do medidor e da leitura inicial (zero).',0],['',0],['Foto 3 – Instalação interna',1],['Registrar um cômodo da residência com lâmpada energizada, comprovando a disponibilidade de energia para o cliente.',0],['',0],['Foto 4 – Centro de distribuição',1],['Evidência da instalação do centro de distribuição, evidenciando as proteções instaladas. Esse item é obrigatório em obras LPT, mesmo que não haja realização da instalação interna.',0],['',0],['Observação: Não serão aceitas fotografias desfocadas, incompletas, sem identificação da unidade consumidora ou sem a informação de latitude e longitude (Lat/Long). As evidências devem permitir a comprovação clara da ligação executada e da energização da unidade consumidora.',0]];
+async function lptGerarPDF(){
+  if(!window.jspdf){ showToast('❌ Biblioteca de PDF não carregou. Verifique a internet.'); return; }
+  const cli=LPT.clientes.filter(c=>c.portal||c.nome||c.medidor||c.fotos.some(Boolean));
+  if(!cli.length&&!LPT.extras.length){ showToast('Preencha pelo menos um cliente'); return; }
+  showToast('⏳ Gerando PDF...');
+  const {jsPDF}=window.jspdf, doc=new jsPDF({unit:'pt',format:'a4'}), W=595.28, H=841.89, M=28, CW=W-2*M, VERDE=[0,163,67], BAN=[220,235,225], BOR=[191,191,191], TX=[64,64,64];
+  const cel=(x,y,w,h,t,o={})=>{ o=Object.assign({size:9,align:'center'},o);
+    if(o.fill){ doc.setFillColor(...o.fill); doc.rect(x,y,w,h,'F'); } if(o.borda!==false){ doc.setDrawColor(...BOR); doc.setLineWidth(.5); doc.rect(x,y,w,h,'S'); }
+    if(t===undefined||t===null||t==='') return; let sz=o.size; doc.setFont('helvetica',o.bold?'bold':'normal'); doc.setFontSize(sz); doc.setTextColor(...(o.color||TX));
+    t=String(t); while(doc.getTextWidth(t)>w-8&&sz>5){ sz-=.5; doc.setFontSize(sz); } while(doc.getTextWidth(t)>w-8&&t.length>2) t=t.slice(0,-2)+'…';
+    const tx=o.align==='left'?x+4:x+w/2; doc.text(t,tx,y+h/2+sz*.35,{align:o.align==='left'?'left':'center'}); };
+  const banner=(y,t,h=30)=>{ doc.setFillColor(...BAN); doc.rect(M,y,CW,h,'F'); doc.setFont('helvetica','normal'); doc.setFontSize(15); doc.setTextColor(0,0,0); doc.text(t,W/2,y+h/2+5,{align:'center'}); };
+  // ---------- Página 1: cabeçalho + relação consolidada ----------
+  doc.setFont('helvetica','normal'); doc.setFontSize(16); doc.setTextColor(127,127,127); doc.text('LPT - EVIDÊNCIA DE LIGAÇÃO',W/2,M+16,{align:'center'});
+  let y=M+34; const LW=100, VW=215, RL=45, RV=CW-LW-VW-RL, rh=18;
+  [['NUM_NOTA',LPT.nota],['NUM_PROJETO',LPT.proj],['TÍTULO',LPT.titulo],['MUNICÍPIO',LPT.mun]].forEach(([l,v],k)=>{ cel(M,y+k*rh,LW,rh,l,{fill:VERDE,color:[255,255,255],align:'left'}); cel(M+LW,y+k*rh,VW,rh,v,{align:'left'}); });
+  cel(M+LW+VW,y,RL,rh*2,'EPS',{fill:VERDE,color:[255,255,255]}); cel(M+LW+VW+RL,y,RV,rh*2,LPT.eps);
+  cel(M+LW+VW,y+rh*2,RL,rh*2,'AR',{fill:VERDE,color:[255,255,255]}); cel(M+LW+VW+RL,y+rh*2,RV,rh*2,LPT.ar);
+  y+=rh*4; banner(y,'RELAÇÃO DE CLIENTES CONSOLIDADA',36); y+=36+16;
+  const cols=[['PORTAL',50],['NOME_CLIENTE',CW-50-110-80],['Nº MEDIDOR',110],['INST. INTERNA',80]], cab=()=>{ let x=M; cols.forEach(([t,w])=>{ cel(x,y,w,17,t,{fill:VERDE,color:[255,255,255],size:9}); x+=w; }); y+=17; };
+  cab(); const linhas=Math.max(16,cli.length);
+  for(let k=0;k<linhas;k++){ if(y+16>H-M-14){ doc.addPage(); y=M; cab(); } const c=cli[k]||{}; let x=M;
+    [[c.portal,50],[c.nome,cols[1][1]],[c.medidor,110],[c.inst?'x':'',80]].forEach(([t,w])=>{ cel(x,y,w,16,t,{size:9}); x+=w; }); y+=16; }
+  // ---------- Evidências fotográficas ----------
+  const HF=146, WW=HF*1.918, TW=HF*.824, GP=6, BH=32+8+HF+GP+HF, SL=[[0,0,WW,'w'],[WW+GP,0,TW,'t'],[0,HF+GP,WW,'w'],[WW+GP,HF+GP,TW,'t']];
+  const fotoSlot=async(src,x,y0,w,h,rot)=>{
+    if(!src){ doc.setFillColor(245,247,246); doc.rect(x,y0,w,h,'F'); doc.setDrawColor(190,190,190); doc.setLineDashPattern([3,2],0); doc.rect(x,y0,w,h,'S'); doc.setLineDashPattern([],0); doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(150,150,150); const ls=doc.splitTextToSize(rot,w-12); doc.text(ls,x+w/2,y0+h/2-(ls.length-1)*4,{align:'center'}); return; }
+    const d=await lptDims(src), k=Math.min(w/d.w,h/d.h), iw=d.w*k, ih=d.h*k; doc.addImage(src,'JPEG',x+(w-iw)/2,y0+(h-ih)/2,iw,ih); };
+  const novaFoto=(t)=>{ doc.addPage(); banner(M,t); return M+30+12; };
+  if(cli.length){ doc.addPage(); banner(M,'EVIDÊNCIAS FOTOGRÁFICAS'); y=M+30+12;
+    for(const c of cli){ if(y+BH>H-M-14) y=novaFoto('EVIDÊNCIAS FOTOGRÁFICAS');
+      const tx=M+(CW-300)/2; [['PORTAL',c.portal],['LAT',c.lat],['LONG',c.lng]].forEach(([l,v],k)=>{ cel(tx+k*100,y,100,15,l,{fill:VERDE,color:[255,255,255],size:9}); cel(tx+k*100,y+15,100,17,v,{size:9}); });
+      const ox=M+(CW-(WW+GP+TW))/2, oy=y+32+8;
+      for(let j=0;j<4;j++){ const [dx,dy,w]=SL[j]; await fotoSlot(c.fotos[j],ox+dx,oy+dy,w,HF,LPT_FOTOS[j]); }
+      y+=BH+14; } }
+  // ---------- Evidências adicionais ----------
+  if(LPT.extras.length){ y=novaFoto('EVIDÊNCIAS ADICIONAIS'); const cw=(CW-10)/2, ih=165, ch=ih+26;
+    for(let k=0;k<LPT.extras.length;k++){ const col=k%2; if(col===0&&k>0) y+=ch+10; if(y+ch>H-M-14){ y=novaFoto('EVIDÊNCIAS ADICIONAIS'); }
+      const x=M+col*(cw+10), ex=LPT.extras[k]; await fotoSlot(ex.img,x,y,cw,ih,''); if(ex.leg){ doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...TX); doc.text(doc.splitTextToSize(ex.leg,cw).slice(0,2),x+cw/2,y+ih+12,{align:'center'}); } } }
+  // ---------- Orientações ----------
+  if(LPT.orient!==false){ doc.addPage(); let oy=M+8; for(const [t,b] of LPT_ORIENT){ if(!t){ oy+=6; continue; } doc.setFont('helvetica',b?'bold':'normal'); doc.setFontSize(10); doc.setTextColor(0,0,0);
+      const ls=doc.splitTextToSize(t,CW); if(oy+ls.length*13>H-M-14){ doc.addPage(); oy=M+8; } doc.text(ls,M,oy+9); oy+=ls.length*13; } }
+  // ---------- Rodapé ----------
+  const n=doc.getNumberOfPages(); for(let p=1;p<=n;p++){ doc.setPage(p); doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(150,150,150);
+    doc.text('LPT - EVIDÊNCIA DE LIGAÇÃO'+(LPT.nota?'  ·  Nota '+LPT.nota:''),M,H-14); doc.text('Página '+p+' de '+n,W-M,H-14,{align:'right'}); }
+  const nome='LPT_evidencia_'+((LPT.nota||LPT.proj||'relatorio').replace(/[^\w\-]+/g,'_'))+'.pdf'; doc.save(nome); showToast('✅ PDF gerado!');
+}
+
 function goTo(p){
   if(p==='carregar') setTimeout(renderSessions,50);
   document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
@@ -1956,6 +2117,7 @@ function goTo(p){
   if(p==='poda') td('poda-data');
   if(p==='obras') td('obras-data');
   if(p==='turno') turnoInit();
+  if(p==='lpt') lptInit();
   if(p==='home') setTimeout(fitOrbital,0);
   if(p==='comunicados') comInit();
   if(p==='carregar'){td('carr-cava-data');td('carr-poda-data');}
