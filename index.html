@@ -514,6 +514,20 @@ body.dark .lp-titulo{color:#6ee7a0}
 .lp-exi img{width:100%;height:110px;object-fit:contain;background:var(--bg-input);border-radius:6px;display:block}
 .lp-exi .x{position:absolute;top:10px;right:10px;border:none;border-radius:50%;width:22px;height:22px;background:rgba(0,0,0,.65);color:#fff;cursor:pointer}
 .lp-chk{display:flex;gap:8px;align-items:center;font-size:13px;font-weight:600}
+/* ===== ABA IA EVIDÊNCIAS (teste) ===== */
+#page-ia{padding:16px;color:var(--text)}
+.ia-aviso{background:linear-gradient(135deg,rgba(0,163,67,.12),rgba(0,163,67,.04));border:1px dashed #00a343;border-radius:12px;padding:12px 14px;font-size:13px;margin-bottom:14px;line-height:1.5}
+.ia-aviso b{color:#00a343}
+.ia-st{font-size:12px;font-weight:700;color:var(--text-sec);margin:8px 0;min-height:16px}
+.ia-cls{display:grid;grid-template-columns:1fr auto auto auto;gap:8px;align-items:center;margin-bottom:8px}
+.ia-cls .n{font-size:12px;font-weight:800;color:#00a343;white-space:nowrap}
+.ia-res{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-top:10px}
+.ia-it{border:1px solid var(--border);border-radius:10px;padding:6px;background:var(--bg-card)}
+.ia-it img{width:100%;height:110px;object-fit:contain;background:var(--bg-input);border-radius:6px;display:block}
+.ia-it select{width:100%;margin-top:6px;padding:6px;border-radius:6px;border:1px solid var(--border);background:var(--bg-input);color:var(--text);font-size:12px}
+.ia-conf{display:inline-block;margin-top:6px;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:800;color:#fff}
+.ia-bx{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.ia-bx select{padding:8px;border-radius:8px;border:1px solid var(--border);background:var(--bg-input);color:var(--text)}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -1193,6 +1207,10 @@ function saveEditProfile(){
       <div class="sidebar-icon">💡</div>
       <span class="sidebar-label">LPT Ligação</span>
     </div>
+    <div class="sidebar-item" id="sb-ia" onclick="goTo('ia')">
+      <div class="sidebar-icon">🤖</div>
+      <span class="sidebar-label">IA Evidências</span>
+    </div>
     <div class="sidebar-item" id="sb-turno" onclick="goTo('turno')">
       <div class="sidebar-icon">⏱️</div>
       <span class="sidebar-label">Turnos</span>
@@ -1236,13 +1254,14 @@ function saveEditProfile(){
       <!-- LINHAS DOS RAIOS (SVG) — do bordo do centro até o bordo de cada nó -->
       <svg class="orb-lines" viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg">
         <line x1="350" y1="268" x2="350" y2="148" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
-        <line x1="408" y1="292" x2="493" y2="207" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
-        <line x1="432" y1="350" x2="552" y2="350" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
-        <line x1="408" y1="408" x2="493" y2="493" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
-        <line x1="350" y1="432" x2="350" y2="552" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
-        <line x1="292" y1="408" x2="207" y2="493" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
-        <line x1="268" y1="350" x2="148" y2="350" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
-        <line x1="292" y1="292" x2="207" y2="207" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
+        <line x1="403" y1="287" x2="480" y2="195" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
+        <line x1="431" y1="336" x2="549" y2="315" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
+        <line x1="421" y1="391" x2="525" y2="451" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
+        <line x1="378" y1="427" x2="419" y2="540" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
+        <line x1="322" y1="427" x2="281" y2="540" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
+        <line x1="279" y1="391" x2="175" y2="451" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
+        <line x1="269" y1="336" x2="151" y2="315" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
+        <line x1="297" y1="287" x2="220" y2="195" stroke="#D85A30" stroke-width="1.3" stroke-dasharray="6,5" opacity=".5"/>
       </svg>
 
       <!-- CENTRO: logo Mariuá -->
@@ -1252,36 +1271,40 @@ function saveEditProfile(){
         <div class="orb-center-sub">Evidências Fotográficas</div>
       </div>
 
-      <!-- MÓDULOS ORBITAIS — 8 nós igualmente espaçados -->
+      <!-- MÓDULOS ORBITAIS — 9 nós igualmente espaçados -->
       <div class="orb-node" style="--ax:350px;--ay:110px" onclick="goTo('cava')">
         <div class="orb-btn">⛏️</div>
         <div class="orb-label">Cava em Rocha</div>
       </div>
-      <div class="orb-node" style="--ax:520px;--ay:180px" onclick="goTo('poda')">
+      <div class="orb-node" style="--ax:504px;--ay:166px" onclick="goTo('poda')">
         <div class="orb-btn">🌿</div>
         <div class="orb-label">Poda</div>
       </div>
-      <div class="orb-node" style="--ax:590px;--ay:350px" onclick="goTo('obras')">
+      <div class="orb-node" style="--ax:586px;--ay:308px" onclick="goTo('obras')">
         <div class="orb-btn">🏗️</div>
         <div class="orb-label">Obras<br>Simplificadas</div>
       </div>
-      <div class="orb-node" style="--ax:520px;--ay:520px" onclick="goTo('lpt')">
+      <div class="orb-node" style="--ax:558px;--ay:470px" onclick="goTo('lpt')">
         <div class="orb-btn">💡</div>
         <div class="orb-label">LPT<br>Ligação</div>
       </div>
-      <div class="orb-node" style="--ax:350px;--ay:590px" onclick="goTo('turno')">
+      <div class="orb-node" style="--ax:432px;--ay:576px" onclick="goTo('ia')">
+        <div class="orb-btn">🤖</div>
+        <div class="orb-label">IA<br>Evidências</div>
+      </div>
+      <div class="orb-node" style="--ax:268px;--ay:576px" onclick="goTo('turno')">
         <div class="orb-btn">⏱️</div>
         <div class="orb-label">Turnos</div>
       </div>
-      <div class="orb-node" style="--ax:180px;--ay:520px" onclick="goTo('comunicados')">
+      <div class="orb-node" style="--ax:142px;--ay:470px" onclick="goTo('comunicados')">
         <div class="orb-btn">📢</div>
         <div class="orb-label">Comunicados</div>
       </div>
-      <div class="orb-node" style="--ax:110px;--ay:350px" onclick="goTo('carregar')">
+      <div class="orb-node" style="--ax:114px;--ay:308px" onclick="goTo('carregar')">
         <div class="orb-btn">📂</div>
         <div class="orb-label">Carregar Dados</div>
       </div>
-      <div class="orb-node" style="--ax:180px;--ay:180px" onclick="abrirRegistros()">
+      <div class="orb-node" style="--ax:196px;--ay:166px" onclick="abrirRegistros()">
         <div class="orb-btn">☁️</div>
         <div class="orb-label">Registros<br>Salvos</div>
       </div>
@@ -1487,6 +1510,31 @@ function saveEditProfile(){
     </div>
     <div class="lp-card"><label class="lp-chk"><input type="checkbox" id="lp-orient" checked onchange="lptLer()"> Incluir a página de Orientações no final do PDF</label></div>
     <input type="file" id="lp-file" accept="image/*" style="display:none" onchange="lptFoto(this)">
+  </div>
+</div>
+
+<div class="page" id="page-ia">
+  <div class="lp-wrap">
+    <div class="lp-top"><div class="lp-titulo">🤖 IA Evidências <span class="lp-sub" style="font-size:12px">TESTE</span></div></div>
+    <div class="ia-aviso"><b>Como funciona:</b> você ensina a IA com exemplos de cada tipo de foto (um "padrão"). Depois envia fotos novas e ela diz de qual tipo é cada uma e coloca no lugar certo. A análise acontece <b>no seu aparelho</b>: as fotos não são enviadas para nenhum serviço de IA. Quanto mais exemplos você ensinar, mais ela acerta.</div>
+    <div class="lp-card"><div class="lp-h">1) Padrões que ela reconhece</div>
+      <div id="ia-classes"></div>
+      <div class="ia-bx">
+        <button class="lp-b" onclick="iaNovaClasse()">+ Novo padrão</button>
+        <select id="ia-cli"></select>
+        <button class="lp-b" onclick="iaAprenderLpt()">📚 Aprender com as fotos do LPT</button>
+        <button class="lp-b" onclick="iaApagarTudo()">🗑 Apagar treinamento</button>
+      </div>
+      <div class="lp-sub" style="display:block;margin-top:6px">As fotos que já estão nos 4 espaços de um cliente na aba LPT viram exemplos prontos.</div>
+    </div>
+    <div class="lp-card"><div class="lp-h">2) Identificar fotos novas</div>
+      <button class="lp-b pri" onclick="document.getElementById('ia-file').click()">📸 Escolher fotos para identificar</button>
+      <input type="file" id="ia-file" accept="image/*" multiple style="display:none" onchange="iaClassificar(this)">
+      <input type="file" id="ia-file-ex" accept="image/*" multiple style="display:none" onchange="iaAddExArq(this)">
+      <div class="ia-st" id="ia-status"></div>
+      <div id="ia-res" class="ia-res"></div>
+      <div id="ia-acoes" class="ia-bx"></div>
+    </div>
   </div>
 </div>
 
@@ -2028,8 +2076,10 @@ async function lptIdbSet(v){ const d=await lptIdb(); return new Promise((res,rej
 async function lptIdbGet(){ const d=await lptIdb(); return new Promise((res,rej)=>{ const q=d.transaction('kv').objectStore('kv').get('estado'); q.onsuccess=()=>res(q.result); q.onerror=()=>rej(q.error); }); }
 function lptSalvar(){ clearTimeout(LPT_TIMER); LPT_TIMER=setTimeout(()=>{ lptIdbSet(JSON.parse(JSON.stringify(LPT))).catch(()=>{}); },600); }
 function lptNovoCliente(){ return {portal:'',nome:'',medidor:'',inst:false,lat:'',lng:'',fotos:[null,null,null,null]}; }
+let LPT_P=null;
+function lptCarregar(){ return LPT_P||(LPT_P=(async()=>{ LPT_PRONTO=true; try{ const e=await lptIdbGet(); if(e) LPT=e; }catch(x){} if(!LPT.clientes.length) LPT.clientes.push(lptNovoCliente()); })()); }
 async function lptInit(){
-  if(!LPT_PRONTO){ LPT_PRONTO=true; try{ const e=await lptIdbGet(); if(e) LPT=e; }catch(x){} if(!LPT.clientes.length) LPT.clientes.push(lptNovoCliente()); }
+  await lptCarregar();
   lpt$('lp-rev').value=LPT.rev??'REV.00'; lpt$('lp-docn').value=LPT.docn??'COELINF003/2026'; lpt$('lp-nota').value=LPT.nota||''; lpt$('lp-proj').value=LPT.proj||''; lpt$('lp-titulo').value=LPT.titulo||''; lpt$('lp-mun').value=LPT.mun||''; lpt$('lp-eps').value=LPT.eps||''; lpt$('lp-ar').value=LPT.ar||''; lpt$('lp-orient').checked=LPT.orient!==false;
   lptRender();
 }
@@ -2113,6 +2163,78 @@ async function lptGerarPDF(){
   const nome='LPT_evidencia_'+((LPT.nota||LPT.proj||'relatorio').replace(/[^\w\-]+/g,'_'))+'.pdf'; doc.save(nome); showToast('✅ PDF gerado!');
 }
 
+/* ===== IA EVIDÊNCIAS (teste): MobileNet no navegador + classificação por exemplos (KNN) ===== */
+const IA_PADRAO=['Fachada e padrão','Medidor (leitura zero)','Instalação interna','Centro de distribuição'];
+let IA={cls:[],ex:[],res:[],ver:0,mod:null,carregando:null,pronto:false}, IA_CARREGOU=false;
+const ia$=id=>document.getElementById(id);
+const iaId=()=>'c'+Math.random().toString(36).slice(2,8);
+function iaPadrao(){ IA.cls=IA_PADRAO.map((n,i)=>({id:iaId(),nome:n,slot:i})); IA.ex=[]; }
+function iaNorm(d){ let n=0; for(let i=0;i<d.length;i++) n+=d[i]*d[i]; n=Math.sqrt(n)||1; const o=new Float32Array(d.length); for(let i=0;i<d.length;i++) o[i]=d[i]/n; return o; }
+function iaPack(v){ let t=''; for(let i=0;i<v.length;i++) t+=String.fromCharCode(Math.max(-127,Math.min(127,Math.round(v[i]*127)))&255); return btoa(t); }
+function iaUnpack(t){ const s=atob(t), v=new Float32Array(s.length); for(let i=0;i<s.length;i++){ let x=s.charCodeAt(i); if(x>127) x-=256; v[i]=x/127; } return iaNorm(v); }
+function iaStatus(m){ const e=ia$('ia-status'); if(e) e.textContent=m||''; }
+function iaImgEl(src){ return new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=()=>rej(new Error('imagem inválida')); i.src=src; }); }
+/* --- IA: carrega o modelo só quando precisa (1ª vez baixa alguns MB e fica em cache) --- */
+function iaLib(){ if(IA.carregando) return IA.carregando;
+  IA.carregando=(async()=>{
+    if(!window.tf) await new Promise((res,rej)=>{ const sc=document.createElement('script'); sc.src='https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js'; sc.onload=res; sc.onerror=()=>rej(new Error('Não consegui baixar a biblioteca de IA. Verifique a internet.')); document.head.appendChild(sc); });
+    let ult; for(const a of ['0.50','0.25']){ try{ iaStatus('Baixando o modelo de IA ('+a+')... só na primeira vez'); const m=await tf.loadLayersModel('https://storage.googleapis.com/tfjs-models/tfjs/mobilenet_v1_'+a+'_224/model.json');
+      IA.mod=tf.model({inputs:m.inputs,outputs:m.getLayer('conv_pw_13_relu').output}); IA.pronto=true; return IA.mod; }catch(e){ ult=e; } }
+    throw new Error('Não consegui baixar o modelo de IA'+(ult&&ult.message?' ('+ult.message+')':'')+'.'); })().catch(e=>{ IA.carregando=null; throw e; });
+  return IA.carregando; }
+IA.emb=async function(src){ await iaLib(); const im=await iaImgEl(src);
+  const t=tf.tidy(()=>{ const x=tf.browser.fromPixels(im).resizeBilinear([224,224]).toFloat().div(127).sub(1).expandDims(0); return IA.mod.predict(x).mean([1,2]).squeeze(); });
+  const d=Float32Array.from(await t.data()); t.dispose(); return iaNorm(d); };
+/* --- Classificação: vizinhos mais parecidos entre os exemplos ensinados --- */
+function iaPrever(v){
+  const ex=IA.ex.filter(e=>e.v&&e.v.length===v.length); if(!ex.length) return null;
+  const sims=ex.map(e=>{ let d=0; for(let i=0;i<v.length;i++) d+=v[i]*e.v[i]; return {c:e.c,s:d}; }).sort((a,b)=>b.s-a.s).slice(0,5), peso={};
+  sims.forEach(x=>{ peso[x.c]=(peso[x.c]||0)+Math.pow(Math.max(0,x.s),6); });
+  const tot=Object.values(peso).reduce((a,b)=>a+b,0)||1; let mc=null, mp=-1; for(const c in peso){ if(peso[c]>mp){ mp=peso[c]; mc=c; } }
+  return {c:mc,conf:mp/tot,sim:sims[0].s}; }
+/* --- Persistência: neste navegador + banco de dados (compartilhado com a equipe) --- */
+function iaSalvar(){ IA.ver=Date.now(); const dados={cls:IA.cls,ex:IA.ex.map(e=>({c:e.c,t:e.t})),ver:IA.ver};
+  try{ localStorage.setItem('mariua_ia',JSON.stringify(dados)); }catch(e){ showToast('⚠️ Treinamento grande demais para salvar neste navegador'); }
+  if(window._fbReady) firebase.firestore().collection('ia').doc('evidencias').set(dados).catch(e=>showToast('⚠️ Erro ao salvar o treinamento no banco: '+e.message)); }
+function iaAdotar(d){ IA.cls=d.cls||[]; IA.ver=d.ver||0; IA.ex=(d.ex||[]).map(e=>({c:e.c,t:e.t,v:iaUnpack(e.t)})); }
+async function iaInit(){
+  if(!IA_CARREGOU){ IA_CARREGOU=true; try{ const l=JSON.parse(localStorage.getItem('mariua_ia')||'null'); if(l&&l.cls) iaAdotar(l); }catch(e){} if(!IA.cls.length) iaPadrao(); }
+  await lptCarregar(); iaRender();
+  if(window._fbReady&&!window._iaFb){ window._iaFb=1; try{ const d=await firebase.firestore().collection('ia').doc('evidencias').get(); if(d.exists&&(d.data().ver||0)>IA.ver){ iaAdotar(d.data()); try{ localStorage.setItem('mariua_ia',JSON.stringify(d.data())); }catch(e){} iaRender(); } }catch(e){ console.warn(e); } } }
+function iaRender(){
+  ia$('ia-classes').innerHTML=IA.cls.map(c=>{ const n=IA.ex.filter(e=>e.c===c.id).length;
+    return `<div class="ia-cls"><input type="text" value="${admEsc(c.nome)}" onchange="iaRenomear('${c.id}',this.value)"><span class="n">${n} exemplo${n===1?'':'s'}</span><button class="lp-b" onclick="iaPedirEx('${c.id}')">+ Exemplos</button><button class="lp-b" title="Remover este padrão" onclick="iaRemoverClasse('${c.id}')">🗑</button></div>`; }).join('');
+  ia$('ia-cli').innerHTML=LPT.clientes.map((c,i)=>`<option value="${i}">Cliente ${i+1}${c.portal?' · portal '+admEsc(c.portal):''}${c.nome?' · '+admEsc(c.nome):''}</option>`).join('');
+  iaRenderRes(); }
+function iaRenomear(id,v){ const c=IA.cls.find(x=>x.id===id); if(c&&v.trim()){ c.nome=v.trim(); iaSalvar(); iaRenderRes(); } }
+function iaNovaClasse(){ const n=prompt('Nome do novo padrão (ex.: Poste instalado, Cava aberta):'); if(!n||!n.trim()) return; IA.cls.push({id:iaId(),nome:n.trim()}); iaSalvar(); iaRender(); }
+function iaRemoverClasse(id){ const c=IA.cls.find(x=>x.id===id); if(!c||!confirm('Remover o padrão "'+c.nome+'" e os exemplos dele?')) return; IA.cls=IA.cls.filter(x=>x.id!==id); IA.ex=IA.ex.filter(e=>e.c!==id); iaSalvar(); iaRender(); }
+function iaApagarTudo(){ if(!confirm('Apagar TODO o treinamento da IA (padrões e exemplos)?')) return; iaPadrao(); IA.res=[]; iaSalvar(); iaRender(); showToast('Treinamento apagado'); }
+function iaPedirEx(id){ IA._alvo=id; ia$('ia-file-ex').click(); }
+function iaAddEx(cid,v){ IA.ex.push({c:cid,t:iaPack(v),v:iaUnpack(iaPack(v))}); const mesmos=IA.ex.filter(e=>e.c===cid); if(mesmos.length>80){ const fora=mesmos[0]; IA.ex.splice(IA.ex.indexOf(fora),1); } if(IA.ex.length>350) IA.ex.shift(); }
+async function iaAddExArq(inp){ const fs=[...inp.files].slice(0,60), cid=IA._alvo; inp.value=''; if(!cid||!fs.length) return;
+  try{ for(let i=0;i<fs.length;i++){ iaStatus('Aprendendo '+(i+1)+'/'+fs.length+'...'); const src=await lptImg(fs[i],1100); iaAddEx(cid,await IA.emb(src)); }
+    iaSalvar(); iaStatus('✅ '+fs.length+' exemplo(s) aprendido(s)'); iaRender(); }catch(e){ iaStatus('❌ '+e.message); } }
+async function iaAprenderLpt(){ await lptCarregar(); const c=LPT.clientes[+ia$('ia-cli').value||0]; let n=0;
+  try{ for(let j=0;j<4;j++){ const f=c&&c.fotos[j], cl=IA.cls.find(x=>x.slot===j); if(!f||!cl) continue; iaStatus('Aprendendo foto '+(j+1)+'...'); iaAddEx(cl.id,await IA.emb(f)); n++; }
+    if(!n){ iaStatus('Esse cliente não tem fotos nos espaços do LPT.'); return; } iaSalvar(); iaStatus('✅ '+n+' exemplo(s) aprendido(s) com o LPT'); iaRender(); }catch(e){ iaStatus('❌ '+e.message); } }
+async function iaClassificar(inp){ const fs=[...inp.files].slice(0,60); inp.value=''; if(!fs.length) return;
+  if(!IA.ex.length){ showToast('Ensine primeiro: adicione exemplos nos padrões'); return; } IA.res=[];
+  try{ for(let i=0;i<fs.length;i++){ iaStatus('Analisando '+(i+1)+'/'+fs.length+'...'); const src=await lptImg(fs[i],1100), v=await IA.emb(src), p=iaPrever(v);
+      IA.res.push({src,v,c:p&&p.conf>=.4?p.c:'',conf:p?p.conf:0}); }
+    iaStatus('✅ '+fs.length+' foto(s) analisada(s). Confira e corrija se precisar.'); iaRenderRes(); }catch(e){ iaStatus('❌ '+e.message); } }
+function iaRenderRes(){
+  const r=ia$('ia-res'); if(!r) return; const op=sel=>`<option value="">— sem padrão —</option>`+IA.cls.map(c=>`<option value="${c.id}" ${c.id===sel?'selected':''}>${admEsc(c.nome)}</option>`).join('');
+  const ordem=IA.res.map((x,i)=>i).sort((a,b)=>{ const ia=IA.cls.findIndex(c=>c.id===IA.res[a].c), ib=IA.cls.findIndex(c=>c.id===IA.res[b].c); return (ia<0?99:ia)-(ib<0?99:ib)||IA.res[b].conf-IA.res[a].conf; });
+  r.innerHTML=ordem.map(i=>{ const x=IA.res[i], cor=x.conf>=.75?'#00a343':(x.conf>=.5?'#e8a317':'#d9534f');
+    return `<div class="ia-it"><img src="${x.src}" alt=""><select onchange="IA.res[${i}].c=this.value;iaRenderRes()">${op(x.c)}</select><span class="ia-conf" style="background:${cor}">${x.c?Math.round(x.conf*100)+'% de certeza':'revisar'}</span></div>`; }).join('');
+  ia$('ia-acoes').innerHTML=IA.res.length?`<button class="lp-b" onclick="iaAprenderCorrecoes()">🎓 Aprender com estas fotos</button><button class="lp-b pri" onclick="iaEnviarLpt()">📤 Enviar para o cliente selecionado no LPT</button>`:''; }
+function iaAprenderCorrecoes(){ let n=0; IA.res.forEach(x=>{ if(x.c){ iaAddEx(x.c,x.v); n++; } }); if(!n){ showToast('Nenhuma foto com padrão definido'); return; } iaSalvar(); iaRender(); showToast('✅ A IA aprendeu com '+n+' foto(s)'); }
+async function iaEnviarLpt(){ await lptCarregar(); const ci=+ia$('ia-cli').value||0, cli=LPT.clientes[ci]; if(!cli){ showToast('Selecione um cliente do LPT'); return; }
+  let ok=0, falt=[]; for(let j=0;j<4;j++){ const cl=IA.cls.find(x=>x.slot===j); const cand=cl?IA.res.filter(x=>x.c===cl.id).sort((a,b)=>b.conf-a.conf)[0]:null;
+    if(cand){ if(cli.fotos[j]&&!confirm('O espaço "'+LPT_FOTOS[j]+'" já tem foto. Substituir?')) continue; cli.fotos[j]=cand.src; ok++; } else falt.push(LPT_FOTOS[j]); }
+  lptSalvar(); showToast(ok?'✅ '+ok+' foto(s) enviada(s) ao LPT'+(falt.length?' · faltou: '+falt.join(', '):''):'Nenhuma foto de padrão LPT para enviar'); if(ok) goTo('lpt'); }
+
 function goTo(p){
   if(p==='carregar') setTimeout(renderSessions,50);
   document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
@@ -2123,6 +2245,7 @@ function goTo(p){
   if(p==='obras') td('obras-data');
   if(p==='turno') turnoInit();
   if(p==='lpt') lptInit();
+  if(p==='ia') iaInit();
   if(p==='home') setTimeout(fitOrbital,0);
   if(p==='comunicados') comInit();
   if(p==='carregar'){td('carr-cava-data');td('carr-poda-data');}
