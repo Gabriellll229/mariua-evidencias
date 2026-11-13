@@ -498,7 +498,7 @@ body.dark .lp-titulo{color:#6ee7a0}
 .lp-sub{font-size:11px;font-weight:600;color:var(--text-sec);text-transform:none;letter-spacing:0;margin-left:6px}
 .lp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
 .lp-grid label,.lp-cli label{font-size:11px;font-weight:700;color:var(--text-sec);display:block}
-.lp-card input[type=text],.lp-card input:not([type]),.lp-card input[type=number]{width:100%;box-sizing:border-box;padding:8px 10px;margin-top:3px;border:1px solid var(--border);border-radius:8px;background:var(--bg-input);color:var(--text);font-family:inherit;font-size:13px}
+.lp-card input[type=text],.lp-card input[type=password],.lp-card input:not([type]),.lp-card input[type=number]{width:100%;box-sizing:border-box;padding:8px 10px;margin-top:3px;border:1px solid var(--border);border-radius:8px;background:var(--bg-input);color:var(--text);font-family:inherit;font-size:13px}
 .lp-cli{border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:12px}
 .lp-cli-top{display:grid;grid-template-columns:70px 1.6fr 1fr 90px 1fr 1fr 36px;gap:8px;align-items:end}
 @media(max-width:900px){.lp-cli-top{grid-template-columns:1fr 1fr}}
@@ -1369,6 +1369,7 @@ function saveEditProfile(){
       <button class="btn-pdf" onclick="triggerExport('cava','pdf')">📄 Baixar PDF</button>
     </div>
     <button class="btn-outline btn-sm" onclick="onQtdChange('cava')">🔄 Atualizar</button>
+        <button class="btn-outline btn-sm" style="border-color:#00a343;color:#00a343;font-weight:700" onclick="iaDaAba('cava')" title="Escolha todas as fotos e a IA separa por cava, na ordem certa">🤖 Organizar com IA</button>
     <button class="btn-reset btn-sm" onclick="resetPage('cava')">🗑️ Resetar</button>
   </div>
 </div>
@@ -1436,6 +1437,7 @@ function saveEditProfile(){
       <button class="btn-pdf" onclick="triggerExport('poda','pdf')">📄 Baixar PDF</button>
     </div>
     <button class="btn-outline btn-sm" onclick="onQtdChange('poda')">🔄 Atualizar</button>
+        <button class="btn-outline btn-sm" style="border-color:#00a343;color:#00a343;font-weight:700" onclick="iaDaAba('poda')" title="Escolha todas as fotos e a IA separa por poda, antes e depois">🤖 Organizar com IA</button>
     <button class="btn-reset btn-sm" onclick="resetPage('poda')">🗑️ Resetar</button>
   </div>
 </div>
@@ -1495,7 +1497,7 @@ function saveEditProfile(){
   <div class="lp-wrap">
     <div class="lp-top">
       <div class="lp-titulo">💡 LPT — Evidência de Ligação</div>
-      <div class="lp-btns"><button class="lp-b pri" onclick="lptGerarPDF()">📄 Gerar PDF</button><button class="lp-b" onclick="lptLimpar()">🗑 Limpar tudo</button></div>
+      <div class="lp-btns"><button class="lp-b" onclick="iaDaAba('lpt')">🤖 Organizar com IA</button><button class="lp-b pri" onclick="lptGerarPDF()">📄 Gerar PDF</button><button class="lp-b" onclick="lptLimpar()">🗑 Limpar tudo</button></div>
     </div>
     <div class="lp-card"><div class="lp-h">Dados da obra</div>
       <div class="lp-grid">
@@ -1526,7 +1528,7 @@ function saveEditProfile(){
 <div class="page" id="page-ia">
   <div class="lp-wrap">
     <div class="lp-top"><div class="lp-titulo">🤖 IA Evidências <span class="lp-sub" style="font-size:12px">TESTE</span></div></div>
-    <div class="ia-aviso"><b>Como funciona:</b> escolha o tipo de obra, ensine a IA com exemplos de cada tipo de foto (um "padrão") e depois envie fotos novas. Ela diz de qual tipo é cada uma e <b>coloca no lugar certo</b>: nos espaços do LPT, ou separada por cava / por poda, já na ordem Antes, Durante, Depois, Trenas. A análise acontece <b>no seu aparelho</b>: as fotos não vão para nenhum serviço de IA. Quanto mais exemplos você ensinar, mais ela acerta.</div>
+    <div class="ia-aviso"><b>Como funciona:</b> escolha o tipo de obra, ensine a IA com exemplos de cada tipo de foto (um "padrão") e depois envie fotos novas. Ela diz de qual tipo é cada uma e <b>coloca no lugar certo</b>: nos espaços do LPT, ou separada por cava / por poda, já na ordem Antes, Durante, Depois, Trenas. Na <b>IA local</b> a análise acontece no seu aparelho e as fotos não saem dele. Se você ligar a <b>IA avançada</b> (mais abaixo), as fotos analisadas são enviadas ao seu servidor e à Anthropic. Quanto mais exemplos você ensinar à IA local, mais ela acerta.</div>
     <div class="ia-modos" id="ia-modos">
       <button class="lp-b" id="iam-lpt" onclick="iaModo('lpt')">💡 LPT Ligação</button>
       <button class="lp-b" id="iam-cava" onclick="iaModo('cava')">⛏️ Cava em Rocha</button>
@@ -1545,16 +1547,27 @@ function saveEditProfile(){
     <div class="lp-card"><div class="lp-h">2) Identificar fotos novas</div>
       <div class="ia-bx" id="ia-opcoes" style="margin:0 0 10px">
         <label class="lp-sub" style="margin:0">Como agrupar
-          <select id="ia-agr" onchange="iaReagrupar()"><option value="fixo">Pela ordem dos arquivos, de N em N (a IA só ajeita a ordem dentro de cada grupo)</option><option value="seq">Pela sequência (a IA descobre onde começa cada item)</option></select></label>
+          <select id="ia-agr" onchange="iaReagrupar()"><option value="fixo">Pela ordem dos arquivos, de N em N (a IA só ajeita a ordem dentro de cada grupo)</option><option value="seq">Pela sequência (a IA descobre onde começa cada item)</option><option value="num">Pelo número lido na foto (IA avançada)</option></select></label>
         <label class="lp-sub" style="margin:0" id="ia-lbl-ini">Começar no nº <input type="number" id="ia-ini" value="1" min="1" style="width:70px;padding:6px;border-radius:6px;border:1px solid var(--border);background:var(--bg-input);color:var(--text)" onchange="iaRender2()"></label>
       </div>
       <button class="lp-b pri" onclick="document.getElementById('ia-file').click()">📸 Escolher fotos para identificar</button>
       <input type="file" id="ia-file" accept="image/*" multiple style="display:none" onchange="iaClassificar(this)">
       <input type="file" id="ia-file-ex" accept="image/*" multiple style="display:none" onchange="iaAddExArq(this)">
+      <div class="ia-st" id="ia-qual" style="margin:8px 0 0"></div>
       <div class="ia-st" id="ia-status"></div>
       <div id="ia-res" class="ia-res"></div>
       <div id="ia-itens"></div>
       <div id="ia-acoes" class="ia-bx"></div>
+    </div>
+    <div class="lp-card"><div class="lp-h">⚡ IA avançada (Claude) <span class="lp-sub">opcional · lê números e legendas nas fotos e entende instruções escritas</span></div>
+      <div class="lp-sub" style="display:block;margin:0 0 10px">Ela usa um servidor seu, que guarda a chave da Anthropic com segurança (veja o arquivo LEIA-ME). <b>As fotos analisadas por ela são enviadas ao seu servidor e à Anthropic.</b> Quando ligada, ela identifica as fotos no lugar da IA local, e você pode mandar a IA local <b>aprender com ela</b> para ficar cada vez mais independente.</div>
+      <div class="lp-grid"><label>Endereço do servidor da IA<input type="text" id="iaa-url" placeholder="https://mariua-ia.seu-usuario.workers.dev"></label>
+        <label>Chave de acesso<input type="password" id="iaa-token" autocomplete="off"></label></div>
+      <label class="lp-chk" style="margin-top:10px"><input type="checkbox" id="iaa-usar"> Usar a IA avançada ao identificar fotos</label>
+      <label class="lp-chk" style="margin-top:6px"><input type="checkbox" id="iaa-comp" checked> Compartilhar esta configuração com a equipe (salva no banco)</label>
+      <label style="display:block;margin-top:10px;font-size:11px;font-weight:700;color:var(--text-sec)">EXPLIQUE À IA COMO RECONHECER <span id="iaa-modo" style="text-transform:none"></span>
+        <textarea id="iaa-instr" rows="5" style="width:100%;box-sizing:border-box;margin-top:4px;padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--bg-input);color:var(--text);font-family:inherit;font-size:13px"></textarea></label>
+      <div class="ia-bx"><button class="lp-b pri" onclick="iaaSalvar()">💾 Salvar</button><button class="lp-b" onclick="iaaTestar()">🔌 Testar conexão</button><button class="lp-b" onclick="iaaRestaurar()">↺ Instrução padrão</button></div>
     </div>
   </div>
 </div>
@@ -2221,11 +2234,15 @@ function iaSalvar(){ const E=iaE(); E.ver=Date.now(); const dados={cls:E.cls,ex:
   try{ localStorage.setItem(iaChave(IA.modo),JSON.stringify(dados)); }catch(e){ showToast('⚠️ Treinamento grande demais para salvar neste navegador'); }
   if(window._fbReady) firebase.firestore().collection('ia').doc(iaDoc(IA.modo)).set(dados).catch(e=>showToast('⚠️ Erro ao salvar o treinamento no banco: '+e.message)); }
 function iaAdotar(m,d){ if(!IA.M[m]) iaPadrao(m); const E=IA.M[m]; E.cls=d.cls||[]; E.ver=d.ver||0; E.ex=(d.ex||[]).map(e=>({c:e.c,t:e.t,v:iaUnpack(e.t)})); }
+function iaPrepara(){ if(IA_CARREGOU) return; IA_CARREGOU=true; for(const m of Object.keys(IA_MODOS)){ try{ const l=JSON.parse(localStorage.getItem(iaChave(m))||'null'); if(l&&l.cls) iaAdotar(m,l); }catch(e){} if(!IA.M[m]||!IA.M[m].cls.length) iaPadrao(m); } iaaCarregar(); }
+function iaDaAba(m){ iaPrepara(); goTo('ia'); iaModo(m); const f=document.getElementById('ia-file'); if(f) f.click(); }
 async function iaInit(){
-  if(!IA_CARREGOU){ IA_CARREGOU=true; for(const m of Object.keys(IA_MODOS)){ try{ const l=JSON.parse(localStorage.getItem(iaChave(m))||'null'); if(l&&l.cls) iaAdotar(m,l); }catch(e){} if(!IA.M[m]||!IA.M[m].cls.length) iaPadrao(m); } }
+  iaPrepara();
   await lptCarregar(); iaRender();
   if(window._fbReady&&!window._iaFb){ window._iaFb=1; try{ for(const m of Object.keys(IA_MODOS)){ const d=await firebase.firestore().collection('ia').doc(iaDoc(m)).get();
-      if(d.exists&&(d.data().ver||0)>(IA.M[m].ver||0)){ iaAdotar(m,d.data()); try{ localStorage.setItem(iaChave(m),JSON.stringify(d.data())); }catch(e){} } } iaRender(); }catch(e){ console.warn(e); } } }
+      if(d.exists&&(d.data().ver||0)>(IA.M[m].ver||0)){ iaAdotar(m,d.data()); try{ localStorage.setItem(iaChave(m),JSON.stringify(d.data())); }catch(e){} } }
+      if(!IAA.url){ const c=await firebase.firestore().collection('config').doc('ia_avancada').get(); if(c.exists){ IAA.url=c.data().url||''; IAA.token=c.data().token||''; IAA.instr=Object.assign({},c.data().instr||{},IAA.instr); try{ localStorage.setItem('mariua_ia_adv',JSON.stringify(IAA)); }catch(e){} } }
+      iaRender(); }catch(e){ console.warn(e); } } }
 function iaModo(m){ IA.modo=m; IA.res=[]; IA.itens=[]; IA.sobra=[]; iaStatus(''); iaRender(); }
 function iaRender(){
   const m=IA.modo, E=iaE(), multi=m!=='lpt';
@@ -2236,7 +2253,7 @@ function iaRender(){
   ia$('ia-cli').style.display=multi?'none':''; ia$('ia-cli').innerHTML=LPT.clientes.map((c,i)=>`<option value="${i}">Cliente ${i+1}${c.portal?' · portal '+admEsc(c.portal):''}${c.nome?' · '+admEsc(c.nome):''}</option>`).join('');
   ia$('ia-btn-aprender').textContent=multi?'📚 Aprender com as fotos da aba '+IA_MODOS[m].nome:'📚 Aprender com as fotos do LPT';
   ia$('ia-dica').textContent=multi?'As fotos que já estão na aba '+IA_MODOS[m].nome+' (cada uma na sua posição: '+IA_MODOS[m].cls.join(', ')+') viram exemplos prontos.':'As fotos que já estão nos 4 espaços de um cliente na aba LPT viram exemplos prontos.';
-  ia$('ia-opcoes').style.display=multi?'flex':'none'; iaRender2(); }
+  ia$('ia-opcoes').style.display=multi?'flex':'none'; ia$('ia-qual').textContent=iaaPronta()?'Usando: ⚡ IA avançada (Claude)':'Usando: IA local (treinada por você)'; iaaRender(); iaRender2(); }
 function iaRender2(){ if(IA.modo==='lpt'){ ia$('ia-itens').innerHTML=''; iaRenderRes(); } else { ia$('ia-res').innerHTML=''; iaRenderItens(); } }
 function iaRenomear(id,v){ const c=iaE().cls.find(x=>x.id===id); if(c&&v.trim()){ c.nome=v.trim(); iaSalvar(); iaRender2(); } }
 function iaNovaClasse(){ const n=prompt('Nome do novo padrão (ex.: Poste instalado, Cava aberta):'); if(!n||!n.trim()) return; iaE().cls.push({id:iaId(),nome:n.trim()}); iaSalvar(); iaRender(); }
@@ -2255,12 +2272,43 @@ async function iaAprenderAba(){
   let n=0; try{ for(const x of lista){ const cl=E.cls.find(c=>c.slot===x.slot); if(!cl) continue; iaStatus('Aprendendo '+(n+1)+'/'+lista.length+'...'); iaAddEx(cl.id,await IA.emb(x.d)); n++; }
     if(!n){ iaStatus('Nenhuma foto encaixou nos padrões.'); return; } iaSalvar(); iaStatus('✅ '+n+' exemplo(s) aprendido(s)'); iaRender(); }catch(e){ iaStatus('❌ '+e.message); } }
 const iaAprenderLpt=iaAprenderAba;
-async function iaClassificar(inp){ const fs=[...inp.files].slice(0,200); inp.value=''; if(!fs.length) return; const E=iaE(), multi=IA.modo!=='lpt';
-  if(!E.ex.length){ showToast('Ensine primeiro: adicione exemplos nos padrões'); return; }
+async function iaClassificar(inp){ const fs=[...inp.files].slice(0,200); inp.value=''; if(!fs.length) return; const E=iaE(), multi=IA.modo!=='lpt', adv=iaaPronta();
+  if(!adv&&!E.ex.length){ showToast('Ensine primeiro a IA local (ou ligue a IA avançada)'); return; }
   if(multi) fs.sort((a,b)=>a.name.localeCompare(b.name,undefined,{numeric:true,sensitivity:'base'})); IA.res=[]; IA.itens=[]; IA.sobra=[];
-  try{ for(let i=0;i<fs.length;i++){ iaStatus('Analisando '+(i+1)+'/'+fs.length+'...'); const src=await lptImg(fs[i],multi?1600:1100), v=await IA.emb(src), p=iaPrever(v);
+  try{
+    if(adv){ const srcs=[]; for(let i=0;i<fs.length;i++){ iaStatus('Preparando '+(i+1)+'/'+fs.length+'...'); srcs.push(await lptImg(fs[i],multi?1600:1100)); }
+      const rs=await iaaClassificar(srcs,fs.map(f=>f.name));
+      IA.res=srcs.map((src,k)=>{ const r=rs[k]||{}, cl=(r.slot!==null&&r.slot!==undefined)?E.cls.find(c=>c.slot===+r.slot):null, conf=Math.max(0,Math.min(1,+r.confianca||0));
+        return {src,v:null,nome:fs[k].name,c:cl?cl.id:'',conf:cl?conf:0,probs:cl?{[cl.id]:conf}:{},num:(r.numero!==null&&r.numero!==undefined&&!isNaN(+r.numero))?+r.numero:null,leitura:r.leitura||'',adv:true}; });
+      if(multi&&IA.res.filter(p=>p.num).length>=IA.res.length/2) ia$('ia-agr').value='num'; }
+    else for(let i=0;i<fs.length;i++){ iaStatus('Analisando '+(i+1)+'/'+fs.length+'...'); const src=await lptImg(fs[i],multi?1600:1100), v=await IA.emb(src), p=iaPrever(v);
       IA.res.push({src,v,nome:fs[i].name,c:p&&p.conf>=.4?p.c:'',conf:p?p.conf:0,probs:p?p.probs:{}}); }
-    if(multi) iaAgrupar(); iaStatus('✅ '+fs.length+' foto(s) analisada(s). Confira e corrija se precisar.'); iaRender2(); }catch(e){ iaStatus('❌ '+e.message); } }
+    if(multi) iaAgrupar(); iaStatus('✅ '+fs.length+' foto(s) analisada(s)'+(adv?' pela IA avançada':'')+'. Confira e corrija se precisar.'); iaRender2(); }catch(e){ iaStatus('❌ '+e.message); } }
+/* --- IA avançada (Claude): chama o SEU servidor, que guarda a chave da Anthropic --- */
+const IAA_INSTR={
+  lpt:'Cada unidade consumidora (LPT) tem 4 fotos: Foto 1 = fachada da casa com o padrão de entrada instalado; Foto 2 = medidor, com o número e a leitura zero visíveis; Foto 3 = instalação interna (cômodo com lâmpada acesa); Foto 4 = centro de distribuição (quadro com disjuntores). Se aparecer um número de portal na foto, informe em "numero".',
+  cava:'Cada cava tem 5 fotos: Antes = terreno ou rocha ainda sem escavação; Durante = escavação ou furação em andamento, com equipe ou ferramenta; Depois = cava aberta e concluída; Trena 1 e Trena 2 = fotos com trena medindo a cava (por exemplo profundidade e largura). Se o número da cava estiver escrito na foto (legenda, placa, carimbo), informe em "numero".',
+  poda:'Cada poda tem 2 fotos: Antes e Depois da poda de vegetação perto da rede elétrica. Normalmente a foto traz escrito o número da poda e se é antes ou depois: leia esse texto e informe "numero" e o padrão. Se não estiver escrito, deduza: antes = vegetação tocando ou perto dos fios; depois = vegetação removida.'};
+let IAA={url:'',token:'',usar:false,instr:{}};
+function iaaCarregar(){ try{ const c=JSON.parse(localStorage.getItem('mariua_ia_adv')||'null'); if(c) IAA=Object.assign(IAA,c); }catch(e){} IAA.instr=IAA.instr||{}; }
+function iaaPronta(){ return !!(IAA.usar&&IAA.url&&IAA.token); }
+function iaaRender(){ if(!ia$('iaa-url')) return; ia$('iaa-url').value=IAA.url||''; ia$('iaa-token').value=IAA.token||''; ia$('iaa-usar').checked=!!IAA.usar; ia$('iaa-instr').value=IAA.instr[IA.modo]||IAAI(IA.modo); ia$('iaa-modo').textContent='· '+IA_MODOS[IA.modo].nome; }
+const IAAI=m=>IAA_INSTR[m]||'';
+function iaaLer(){ IAA.url=ia$('iaa-url').value.trim().replace(/\/+$/,''); IAA.token=ia$('iaa-token').value.trim(); IAA.usar=ia$('iaa-usar').checked; IAA.instr[IA.modo]=ia$('iaa-instr').value; }
+function iaaSalvar(){ iaaLer(); try{ localStorage.setItem('mariua_ia_adv',JSON.stringify(IAA)); }catch(e){}
+  if(ia$('iaa-comp').checked&&window._fbReady) firebase.firestore().collection('config').doc('ia_avancada').set({url:IAA.url,token:IAA.token,instr:IAA.instr}).catch(e=>showToast('⚠️ Erro ao salvar no banco: '+e.message));
+  showToast('✅ Configuração da IA salva'); iaRender(); }
+function iaaRestaurar(){ ia$('iaa-instr').value=IAAI(IA.modo); }
+async function iaaChamar(corpo){ let r; try{ r=await fetch(IAA.url,{method:'POST',headers:{'content-type':'application/json','x-mariua-token':IAA.token},body:JSON.stringify(corpo)}); }catch(e){ throw new Error('Não consegui falar com o servidor da IA. Confira o endereço e a internet.'); }
+  let j=null; try{ j=await r.json(); }catch(e){} if(!r.ok||!j||j.ok===false) throw new Error((j&&j.erro)||('O servidor da IA respondeu '+r.status)); return j; }
+async function iaaTestar(){ iaaLer(); try{ iaStatus('Testando...'); const j=await iaaChamar({acao:'ping'}); iaStatus('✅ IA avançada conectada'+(j.modelo?' · modelo '+j.modelo:'')); }catch(e){ iaStatus('❌ '+e.message); } }
+function iaaReduz(src,max){ return new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>{ const k=Math.min(1,max/Math.max(im.width,im.height)), c=document.createElement('canvas'); c.width=Math.round(im.width*k); c.height=Math.round(im.height*k); c.getContext('2d').drawImage(im,0,0,c.width,c.height); res(c.toDataURL('image/jpeg',0.8).split(',')[1]); }; im.onerror=()=>rej(new Error('imagem inválida')); im.src=src; }); }
+async function iaaClassificar(srcs,nomes){ const E=iaE(), classes=E.cls.filter(c=>c.slot!==undefined).map(c=>({slot:c.slot,nome:c.nome})), out=new Array(srcs.length).fill(null), LOTE=4;
+  for(let i=0;i<srcs.length;i+=LOTE){ iaStatus('IA avançada analisando '+Math.min(i+LOTE,srcs.length)+'/'+srcs.length+'...'); const imagens=[];
+    for(let k=i;k<Math.min(i+LOTE,srcs.length);k++) imagens.push({id:'i'+k,nome:nomes[k],b64:await iaaReduz(srcs[k],1024)});
+    const j=await iaaChamar({acao:'classificar',tipoObra:IA_MODOS[IA.modo].nome,instrucoes:IAA.instr[IA.modo]||IAAI(IA.modo),classes,imagens});
+    (j.resultados||[]).forEach(r=>{ const k=parseInt(String(r.id).replace('i',''),10); if(!isNaN(k)&&k<out.length) out[k]=r; }); }
+  return out; }
 /* --- LPT: uma foto por padrão, enviada para os espaços de um cliente --- */
 function iaRenderRes(){
   const r=ia$('ia-res'); if(!r) return; const E=iaE(), op=sel=>`<option value="">— sem padrão —</option>`+E.cls.map(c=>`<option value="${c.id}" ${c.id===sel?'selected':''}>${admEsc(c.nome)}</option>`).join('');
@@ -2268,7 +2316,7 @@ function iaRenderRes(){
   r.innerHTML=ordem.map(i=>{ const x=IA.res[i], cor=x.conf>=.75?'#00a343':(x.conf>=.5?'#e8a317':'#d9534f');
     return `<div class="ia-it"><img src="${x.src}" alt=""><select onchange="IA.res[${i}].c=this.value;iaRenderRes()">${op(x.c)}</select><span class="ia-conf" style="background:${cor}">${x.c?Math.round(x.conf*100)+'% de certeza':'revisar'}</span></div>`; }).join('');
   ia$('ia-acoes').innerHTML=IA.res.length?`<button class="lp-b" onclick="iaAprenderCorrecoes()">🎓 Aprender com estas fotos</button><button class="lp-b pri" onclick="iaEnviarLpt()">📤 Enviar para o cliente selecionado no LPT</button>`:''; }
-function iaAprenderCorrecoes(){ let n=0; IA.res.forEach(x=>{ if(x.c){ iaAddEx(x.c,x.v); n++; } }); if(!n){ showToast('Nenhuma foto com padrão definido'); return; } iaSalvar(); iaRender(); showToast('✅ A IA aprendeu com '+n+' foto(s)'); }
+async function iaAprenderCorrecoes(){ let n=0; try{ for(const x of IA.res){ if(x.c){ if(!x.v) x.v=await IA.emb(x.src); iaAddEx(x.c,x.v); n++; } } }catch(e){ iaStatus('❌ '+e.message); return; } if(!n){ showToast('Nenhuma foto com padrão definido'); return; } iaSalvar(); iaRender(); showToast('✅ A IA aprendeu com '+n+' foto(s)'); }
 async function iaEnviarLpt(){ await lptCarregar(); const ci=+ia$('ia-cli').value||0, cli=LPT.clientes[ci]; if(!cli){ showToast('Selecione um cliente do LPT'); return; }
   let ok=0, falt=[]; for(let j=0;j<4;j++){ const cl=iaE().cls.find(x=>x.slot===j); const cand=cl?IA.res.filter(x=>x.c===cl.id).sort((a,b)=>b.conf-a.conf)[0]:null;
     if(cand){ if(cli.fotos[j]&&!confirm('O espaço "'+LPT_FOTOS[j]+'" já tem foto. Substituir?')) continue; cli.fotos[j]=cand.src; ok++; } else falt.push(LPT_FOTOS[j]); }
@@ -2280,6 +2328,8 @@ function iaMelhor(ch,slotCls,n){ let melhor=null, mb=-1; const usado=new Array(n
   const out={}; (melhor||[]).forEach((s,k)=>{ out[s]=ch[k]; }); return out; }
 function iaAgrupar(){ const n=IA_MODOS[IA.modo].cls.length, slotCls=iaSlotCls(), agr=(ia$('ia-agr')||{}).value||'fixo'; IA.itens=[]; IA.sobra=[];
   if(agr==='fixo'){ for(let i=0;i<IA.res.length;i+=n) IA.itens.push({slots:iaMelhor(IA.res.slice(i,i+n),slotCls,n)}); }
+  else if(agr==='num'){ const por={}; IA.res.forEach(p=>{ if(p.num) (por[p.num]=por[p.num]||[]).push(p); else IA.sobra.push(p); });
+    Object.keys(por).map(Number).sort((a,b)=>a-b).forEach(nm=>{ const it={slots:{},num:nm}; por[nm].sort((a,b)=>b.conf-a.conf).forEach(p=>{ const s=Object.keys(slotCls).find(k=>slotCls[k]===p.c); if(s===undefined||it.slots[+s]) IA.sobra.push(p); else it.slots[+s]=p; }); IA.itens.push(it); }); }
   else { let cur=null; IA.res.forEach(p=>{ const s=Object.keys(slotCls).find(k=>slotCls[k]===p.c); if(s===undefined){ IA.sobra.push(p); return; } const si=+s; if(!cur||cur.slots[si]||si<cur.ultimo){ cur={slots:{},ultimo:-1}; IA.itens.push(cur); } cur.slots[si]=p; cur.ultimo=si; }); } }
 function iaReagrupar(){ if(IA.modo!=='lpt'&&IA.res.length){ iaAgrupar(); iaRender2(); } }
 function iaTrocar(k,s,t){ const it=IA.itens[k], a=it.slots[s], b=it.slots[t]; if(s===t) return; if(b) it.slots[s]=b; else delete it.slots[s]; it.slots[t]=a; iaRenderItens(); }
@@ -2287,16 +2337,18 @@ function iaRenderItens(){
   const box=ia$('ia-itens'); if(!box) return; if(IA.modo==='lpt'){ box.innerHTML=''; return; }
   if(!IA.itens.length&&!IA.sobra.length){ box.innerHTML=''; ia$('ia-acoes').innerHTML=''; return; }
   const E=iaE(), labs=[...E.cls].filter(c=>c.slot!==undefined).sort((a,b)=>a.slot-b.slot), slotCls=iaSlotCls(), ini=+ia$('ia-ini').value||1, nome=IA.modo==='cava'?'Cava':'Poda';
-  box.innerHTML=IA.itens.map((it,k)=>`<div class="ia-item"><div class="ia-item-h">${nome} ${ini+k}</div><div class="ia-slots">`+labs.map(c=>{ const s=c.slot, p=it.slots[s];
+  box.innerHTML=IA.itens.map((it,k)=>`<div class="ia-item"><div class="ia-item-h">${nome} ${it.num!=null?it.num:ini+k}</div><div class="ia-slots">`+labs.map(c=>{ const s=c.slot, p=it.slots[s];
       if(!p) return `<div class="ia-slot vazio"><b>${admEsc(c.nome)}</b>sem foto</div>`;
       const pr=Math.round(((p.probs&&p.probs[slotCls[s]])||0)*100), cor=pr>=75?'#00a343':(pr>=50?'#e8a317':'#d9534f');
-      return `<div class="ia-slot"><b>${admEsc(c.nome)}</b><img src="${p.src}" alt=""><span class="ia-conf" style="background:${cor}">${pr}%</span><select onchange="iaTrocar(${k},${s},+this.value)">`+labs.map(x=>`<option value="${x.slot}" ${x.slot===s?'selected':''}>${admEsc(x.nome)}</option>`).join('')+`</select></div>`; }).join('')+`</div></div>`).join('')
+      return `<div class="ia-slot"><b>${admEsc(c.nome)}</b><img src="${p.src}" alt=""><span class="ia-conf" style="background:${cor}">${pr}%</span>${p.leitura?`<div style="font-size:10px;margin-top:3px;opacity:.8">${admEsc(p.leitura)}</div>`:''}<select onchange="iaTrocar(${k},${s},+this.value)">`+labs.map(x=>`<option value="${x.slot}" ${x.slot===s?'selected':''}>${admEsc(x.nome)}</option>`).join('')+`</select></div>`; }).join('')+`</div></div>`).join('')
     +(IA.sobra.length?`<div class="ia-item"><div class="ia-item-h" style="color:#d9534f">Não encaixaram (${IA.sobra.length})</div><div class="ia-slots">${IA.sobra.map(p=>`<div class="ia-slot"><img src="${p.src}" alt=""><span>${admEsc(p.nome)}</span></div>`).join('')}</div></div>`:'');
   ia$('ia-acoes').innerHTML=`<button class="lp-b" onclick="iaAprenderOrg()">🎓 Aprender com esta organização</button><button class="lp-b pri" onclick="iaEnviarAba()">📤 Enviar para a aba ${IA_MODOS[IA.modo].nome}</button>`; }
-function iaAprenderOrg(){ const slotCls=iaSlotCls(); let n=0; IA.itens.forEach(it=>{ for(const s in it.slots){ if(slotCls[s]){ iaAddEx(slotCls[s],it.slots[s].v); n++; } } }); if(!n) return; iaSalvar(); iaRender(); showToast('✅ A IA aprendeu com '+n+' foto(s)'); }
+async function iaAprenderOrg(){ const slotCls=iaSlotCls(); let n=0;
+  try{ for(const it of IA.itens){ for(const s in it.slots){ if(!slotCls[s]) continue; const p=it.slots[s]; if(!p.v){ iaStatus('Aprendendo '+(n+1)+'...'); p.v=await IA.emb(p.src); } iaAddEx(slotCls[s],p.v); n++; } } }catch(e){ iaStatus('❌ '+e.message); return; }
+  if(!n) return; iaSalvar(); iaStatus('✅ A IA local aprendeu com '+n+' foto(s)'); iaRender(); showToast('✅ A IA aprendeu com '+n+' foto(s)'); }
 function iaEnviarAba(){ const m=IA.modo, ini=+ia$('ia-ini').value||1; if(!S[m]) S[m]={}; let n=0;
-  IA.itens.forEach((it,k)=>{ for(const s in it.slots){ const p=it.slots[s]; S[m][`${m}_${ini+k}_${s}`]={d:p.src,n:p.nome}; n++; } });
-  const total=ini+IA.itens.length-1, q=document.getElementById(m+'-qtd'); if(q&&(+q.value||0)<total) q.value=total; onQtdChange(m);
+  let total=0; IA.itens.forEach((it,k)=>{ const idx=it.num!=null?it.num:ini+k; total=Math.max(total,idx); for(const s in it.slots){ const p=it.slots[s]; S[m][`${m}_${idx}_${s}`]={d:p.src,n:p.nome}; n++; } });
+  const q=document.getElementById(m+'-qtd'); if(q&&(+q.value||0)<total) q.value=total; onQtdChange(m);
   showToast('✅ '+n+' foto(s) enviadas para '+IA_MODOS[m].nome); goTo(m); }
 
 function goTo(p){
